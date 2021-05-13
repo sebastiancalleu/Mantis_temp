@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project</title>
+  <meta name="keywords" content="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod.">
+  <meta name="description" content="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod.">
+
+  <link rel="stylesheet" href="assets/fonts/flat-icon/flaticon.css">
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div id="content-wrapper">
+  <header class="header header--bg">
+    <div class="container">
+      <nav class="navbar">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span> 
+          </button>
+          <a class="navbar-brand" href="#">MANTIS</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+          <ul class="nav navbar-nav">
+            <li><a href="#">HOME</a></li>
+            <li><a href="#">ABOUT</a></li>
+            <li><a href="#">TEAM</a></li> 
+          </ul>
+        </div>
+      </nav>
+      <div class="header__content text-center">
+        <span class="header__content__block">Hello, this is the screening questions service</span>
+        <h1 id="header__content__title">THIS IS THE SCREENING QUESTIONS SERVICE</h1>
+        <form action="http://127.0.0.1:3000/api/get" method="POST">
+            <input class="url_field" placeholder="enter your URL" name="URLlink"/>
+            <input class="header__button" type="submit"/>
+        </form>
+      </div>
+    </div>
+  </header>
+
+  <footer class="footer footer--bg">
+    <div class="container text-center">
+      <h1 class="footer__title">MANTIS</h1>
+    </div>
+    <hr style="border: 0;border-top: 1px solid #525B60;display:block;margin-top: 40px;">
+    <div class="container text-center">
+      <p class="footer__paragraph">Copyright &copy; 2021 lucho, dani y sebas , todos los derechos reservados.</p>
+    </div>
+  </footer>
+</div>
+  <script src="assets/jquery/jquery-3.2.1.min.js"></script>
+  <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+  <script src="js/mixitup.js"></script>
+
+  <script>
+      fetch("http://127.0.0.1:3000/api/name")
+      .then(response => response.json())
+      .then(function(data){
+          $("h1#header__content__title").text(data.question)
+      })
+
+  </script>
+</body>
+</html>  
