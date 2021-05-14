@@ -36,8 +36,13 @@
         <span class="header__content__block">Hello, this is the screening questions service</span>
         <h1 id="header__content__title">THIS IS THE SCREENING QUESTIONS SERVICE</h1>
         <form action="http://127.0.0.1:3000/api/get" method="POST">
+            <input
+            type="hidden"
+            name="_redirect"
+            value="http://google.com"
+          />
             <input class="url_field" placeholder="enter your URL" name="URLlink"/>
-            <input class="header__button" type="submit"/>
+            <button class="header__button" type="submit">Send URL</button>
         </form>
       </div>
     </div>
