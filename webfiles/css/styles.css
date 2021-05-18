@@ -31,6 +31,24 @@ body{
   }
 }
 
+#screeningquestions {
+    display: flex;
+    flex-direction: column;
+}
+
+#questionsform {
+    margin: auto;
+}
+
+.questions {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.questionlabel {
+    margin-left: 20px;
+}
+
 ul li{
   list-style-type: none;
 }
@@ -74,7 +92,19 @@ html,body {
   height: 100%;
   margin: 0px;
   padding: 0px;
-  overflow-x: hidden; 
+  overflow-x: hidden;
+  position: relative;
+}
+
+#serverstatus {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    color: white;
+}
+
+#urlform {
+    margin-top: 20px;
 }
 
 .header--bg{

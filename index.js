@@ -16,10 +16,35 @@ app.use((req, res, next) => {
 
 app.listen(3000)
 
-app.get("/api/name", function(req, res){
+app.get("/api/status", function(req, res){
   res.json({
-    question: "what is your name",
+    status: "OK",
   })
+})
+
+app.post("/api/inputurl", function(req, res){
+  console.log(req.body)
+  if (req.body.url === "www.mantis.com") {
+    sq = [
+      {
+        "name": "Nombre",
+        "type": "input" 
+      },
+      {
+        "name": "Edad",
+        "type": "input" 
+      },
+      {
+        "name": "holbie",
+        "type": "input"
+      }
+    ]
+    res.json(sq)
+  } else {
+  res.json({
+    status: "OK",
+  })
+}
 })
 
 app.post("/api/get", function(req, res){

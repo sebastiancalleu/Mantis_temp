@@ -34,20 +34,21 @@
       </nav>
       <div class="header__content text-center">
         <span class="header__content__block">Hello, this is the screening questions service</span>
-        <h1 id="header__content__title">THIS IS THE SCREENING QUESTIONS SERVICE</h1>
-        <form action="http://127.0.0.1:3000/api/get" method="POST">
-            <input
-            type="hidden"
-            name="_redirect"
-            value="http://google.com"
-          />
+        <form action="http://127.0.0.1:3000/api/get" method="POST" id="urlform">
             <input class="url_field" placeholder="enter your URL" name="URLlink"/>
-            <button class="header__button" type="submit">Send URL</button>
         </form>
+        <button class="header__button">Send URL</button>
       </div>
     </div>
+    <div>
+        <h4 id="serverstatus">Server status: Disconnected</h4>
+    </div>
   </header>
+  <section id="screeningquestions">
+      <form id="questionsform">
 
+      </form>
+  </section>
   <footer class="footer footer--bg">
     <div class="container text-center">
       <h1 class="footer__title">MANTIS</h1>
@@ -63,10 +64,34 @@
   <script src="js/mixitup.js"></script>
 
   <script>
-      fetch("http://127.0.0.1:3000/api/name")
+      fetch("http://127.0.0.1:3000/api/status")
       .then(response => response.json())
       .then(function(data){
-          $("h1#header__content__title").text(data.question)
+          if (data.status === "OK") {
+            $("#serverstatus").text("Server status: Connected")
+          }
+      })
+
+      $(".header__button").click(function() {
+        let joburl = $(".url_field").val()
+        fetch("http://127.0.0.1:3000/api/inputurl", {
+            method: "POST",
+            body: JSON.stringify({"url" : joburl}),
+            headers: {
+		        'Content-type': 'application/json' // The type of data you're sending
+	        }
+        }).then(response => response.json())
+        .then(function(data) {
+            if (data.status === "OK") {
+               $("#serverstatus").text("Server status: URL proccesed")
+            }
+            $("#questionsform").empty()
+            for (question in data) {
+                $("#questionsform").append("<div class='questions' id='question" + question + "'></div>")
+                $("#question" + question).append("<" + data[question].type + "\>")
+                $("#question" + question).append("<label class='questionlabel'>" + data[question].name + "</label>")
+            }
+        })
       })
 
   </script>
