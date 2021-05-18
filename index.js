@@ -1,4 +1,5 @@
 const express = require("express");
+const getJSON = require('./parseFormMVP').getJSON
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
@@ -24,27 +25,33 @@ app.get("/api/status", function(req, res){
 
 app.post("/api/inputurl", function(req, res){
   console.log(req.body)
-  if (req.body.url === "www.mantis.com") {
-    sq = [
-      {
-        "name": "Nombre",
-        "type": "input" 
-      },
-      {
-        "name": "Edad",
-        "type": "input" 
-      },
-      {
-        "name": "holbie",
-        "type": "input"
-      }
-    ]
-    res.json(sq)
-  } else {
-  res.json({
-    status: "OK",
-  })
-}
+  async function urljson() {
+   const mantisita = await getJSON(req.body.url)
+   console.log(mantisita)
+   return mantisita
+  }
+  res.json(urljson())
+//   if (req.body.url === "www.mantis.com") {
+//     sq = [
+//       {
+//         "name": "Nombre",
+//         "type": "input" 
+//       },
+//       {
+//         "name": "Edad",
+//         "type": "input" 
+//       },
+//       {
+//         "name": "holbie",
+//         "type": "input"
+//       }
+//     ]
+//     res.json(sq)
+//   } else {
+//   res.json({
+//     status: "OK",
+//   })
+// }
 })
 
 app.post("/api/get", function(req, res){

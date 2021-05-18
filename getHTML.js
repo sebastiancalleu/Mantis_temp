@@ -8,6 +8,7 @@ const scrapForm = async (url) => {
   browser = await puppeteer.launch({ args: ['--no-sandbox'] });
   /* se abre una pagina nueva */
   page = await browser.newPage();
+  await page.setDefaultNavigationTimeout(0);
   /* va a la pagina y espera a que se cargue todo */
   await page.goto(url, {
     waitUntil: 'networkidle2'
