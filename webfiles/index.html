@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Project</title>
+  <title>Project Mantis</title>
   <meta name="keywords" content="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod.">
   <meta name="description" content="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod.">
 
@@ -64,7 +64,7 @@
   <script src="js/mixitup.js"></script>
 
   <script>
-      fetch("http://127.0.0.1:3000/api/status")
+      fetch("http://localhost:3000/api/status")
       .then(response => response.json())
       .then(function(data){
           if (data.status === "OK") {
@@ -73,11 +73,12 @@
       })
 
       $(".header__button").click(function() {
+        $("#questionsform").empty()
         let joburl = $(".url_field").val()
         $("#questionsform").append("<div class='chargeqst' id='chargequestions'></div>")
         $("#chargequestions").append("<h1 id='chargetext'></h1>")
         $("#chargetext").text("Charging")
-        fetch("http://127.0.0.1:3000/api/inputurl", {
+        fetch("http://localhost:3000/api/inputurl", {
             method: "POST",
             body: JSON.stringify({"url" : joburl}),
             headers: {
