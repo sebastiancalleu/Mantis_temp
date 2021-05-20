@@ -22,7 +22,6 @@ async function getJSON(URL) {
   await PlainHTML(URL)
     .then((formHTML) => {
       const $ = cheerio.load(formHTML);
-      console.log(formHTML)
 
       $('input').each((i, element) => {
 
@@ -37,7 +36,6 @@ async function getJSON(URL) {
           };
 
           if (tmpObj.name !== '') {
-            console.log("wtf")
             fieldsArray.push(tmpObj);
           }
 
@@ -52,3 +50,5 @@ async function getJSON(URL) {
   const MyJSON = await getJSON(URL_b);
   console.log(MyJSON)
 })(URL_a);
+
+exports.getJSON = getJSON;

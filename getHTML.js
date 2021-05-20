@@ -5,14 +5,19 @@ let page, browser
 
 const scrapForm = async (url) => {
   /* crea una instancia nueva de chronium */
-  browser = await puppeteer.launch({ args: ['--no-sandbox'] });
+  browser = await puppeteer.launch({ args: ["--disabled-setupid-sandbox", '--disable-gpu',
+  '--disable-dev-shm-usage',
+  '--disable-setuid-sandbox',
+  '--no-first-run',
+  '--no-sandbox',
+  '--no-zygote',
+  '--single-process',
+] });
   /* se abre una pagina nueva */
   page = await browser.newPage();
-  await page.setDefaultNavigationTimeout(0);
+  page.setDefaultNavigationTimeout(0);
   /* va a la pagina y espera a que se cargue todo */
-  await page.goto(url, {
-    waitUntil: 'networkidle2'
-  });
+  await page.goto(url);
   /* Busca los campos solicitados y los retorna depenmdiendo del argumento pasado en la linea de codigo*/
   const preguntas = await page.$eval('form', contenido => contenido.outerHTML)
   await browser.close();

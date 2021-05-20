@@ -31,6 +31,16 @@ body{
   }
 }
 
+#chargequestions {
+    height: 300px;
+    text-align: center;
+    vertical-align: auto;
+}
+
+#chargetext {
+    margin-top: 150px;
+}
+
 #screeningquestions {
     display: flex;
     flex-direction: column;

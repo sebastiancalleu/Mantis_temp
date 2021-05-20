@@ -1,5 +1,5 @@
 const express = require("express");
-const getJSON = require('./parseFormMVP').getJSON
+const getJSON = require('./parseFormMVP').getJSON;
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
@@ -24,13 +24,15 @@ app.get("/api/status", function(req, res){
 })
 
 app.post("/api/inputurl", function(req, res){
-  console.log(req.body)
   async function urljson() {
-   const mantisita = await getJSON(req.body.url)
-   console.log(mantisita)
-   return mantisita
-  }
-  res.json(urljson())
+      const mantisita = await getJSON(req.body.url)
+      return mantisita
+}
+  const dct = urljson()
+  dct.then(function(result){
+    console.log(result)
+    res.json(result)
+  })
 //   if (req.body.url === "www.mantis.com") {
 //     sq = [
 //       {
