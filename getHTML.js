@@ -7,7 +7,16 @@ const getPreviousActions = require('./getActions').getPreviousActions;
 
 
 async function scrapForm(URL) {
-  const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
+  browser = await puppeteer.launch({
+    args: ["--disabled-setupid-sandbox", '--disable-gpu',
+      '--disable-dev-shm-usage',
+      '--disable-setuid-sandbox',
+      '--no-first-run',
+      '--no-sandbox',
+      '--no-zygote',
+      '--single-process',
+    ]
+  });
   const page = await browser.newPage();
 
   await page.goto(URL, {
@@ -27,13 +36,14 @@ async function scrapForm(URL) {
   // for testing purposes
   // console.log(rawHTML);
 
-  return rawHTML;
 
   browser.close();
+  return rawHTML;
+
 }
 
 // for testing pourposes
-// getHTML('https://jobs.smartrecruiters.com/Visa/743999746639954-software-developer-java');
+// scrapForm('https://aldingerco.bamboohr.com/jobs/view.php?id=48');
 
 
 exports.scrapForm = scrapForm
