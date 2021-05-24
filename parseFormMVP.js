@@ -1,7 +1,7 @@
 const scrapForm = require('./getHTML').scrapForm;
 const cheerio = require('cheerio');
 
-const URL_a = 'https://jobs.lever.co/cornershopapp/5c67c51d-b71b-4859-abd1-e8847472839a';
+const URL_a = 'https://digisay.breezy.hr/p/9da23a0dfe7b01-product-owner-saas-software-development';
 
 async function PlainHTML(URL_d) {
   try {
@@ -86,6 +86,21 @@ async function getJSON(URL) {
             fieldsArray.push(tmpObj1);
           }
         })
+      } else if (URL.includes('breezy.hr')) {
+        $('input').each((i, element) => {
+          if (element.attribs.type != 'hidden' && element.attribs.required === '') {
+            let aux = element.attribs.name;
+            let aux2 = aux.replace("c", "")
+            let tmpObj = {
+              name: aux2,
+              type: element.attribs.type
+            }
+            fieldsArray.push(tmpObj);
+          }
+        })
+        if (fieldsArray.length != 4) {
+          fieldsArray.length = 0
+        } 
       }
 
     });
