@@ -1,7 +1,7 @@
 const scrapForm = require('./getHTML').scrapForm;
 const cheerio = require('cheerio');
 
-const URL_a = 'https://digisay.breezy.hr/p/9da23a0dfe7b01-product-owner-saas-software-development';
+const URL_a = 'https://directscale.applytojob.com/apply/Dm16fmaRNu/Software-Development-Engineer-In-Test';
 
 async function PlainHTML(URL_d) {
   try {
@@ -101,6 +101,26 @@ async function getJSON(URL) {
         if (fieldsArray.length != 4) {
           fieldsArray.length = 0
         } 
+      } else if (URL.includes('applytojob.com')) {
+        let count = 0
+        $('.asterisk').each(() => {
+          count++;
+        })
+        $('input').each((i, element) => {
+          if (element.attribs.type != 'hidden') {
+            let aux = element.attribs.name
+            let aux2 = aux.replace("resumator-", "").replace("-value", "")
+          let tmpObj = {
+            name: aux2,
+            type: element.attribs.type
+          }
+          fieldsArray.push(tmpObj)
+          }
+        })
+        if (count != 6) {
+          fieldsArray.length = 0
+          count = 0
+        }
       }
 
     });
