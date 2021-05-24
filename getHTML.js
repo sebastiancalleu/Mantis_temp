@@ -29,7 +29,7 @@ async function scrapForm(URL) {
 
 
   // Posible solución: https://github.com/puppeteer/puppeteer/issues/5328
-  await page.waitFor(10000);
+  await page.waitFor(2000);
 
   const rawHTML = await page.evaluate(getActions(URL));
 

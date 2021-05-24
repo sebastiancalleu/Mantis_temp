@@ -1,7 +1,7 @@
 const scrapForm = require('./getHTML').scrapForm;
 const cheerio = require('cheerio');
 
-const URL_a = 'https://boards.greenhouse.io/twitch/jobs/5166466002';
+const URL_a = 'https://jobs.lever.co/cornershopapp/5c67c51d-b71b-4859-abd1-e8847472839a';
 
 async function PlainHTML(URL_d) {
   try {
@@ -60,9 +60,32 @@ async function getJSON(URL) {
         });
       } else if (URL.includes('jobs.lever.co')) {
         $('input').each((i, element) => {
-          console.log(formHTML)
-          console.log(element)
+          if (element.attribs.type != 'hidden') {
+            let aux;
+            if (element.attribs.type === 'checkbox') {
+              aux = 'Acepto y estoy de acuerdo con la Declaración de Candidatos y Candidatas (cornershopapp.com/candidates-privacy)'
+            } else if (element.attribs.name === 'org') {
+              aux = 'Current company'
+            } else {
+              aux = element.attribs.name
+            }
+            let tmpObj = {
+              name: aux,
+              type: element.attribs.type
+            }
+            fieldsArray.push(tmpObj);
+          }
         });
+        $('textarea').each((i, element) => {
+          if (element.attribs.required) {
+            
+            let tmpObj1 = {
+              name: '¿Cuál es tu expectativa salarial para esta posición?',
+              type: 'textarea'
+            }
+            fieldsArray.push(tmpObj1);
+          }
+        })
       }
 
     });
