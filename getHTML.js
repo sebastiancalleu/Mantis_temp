@@ -1,27 +1,39 @@
+// This module has a function that retrieves the html of a given URL
+// It uses puppeteer for wait for all the HTML to be complete generated
+
 const puppeteer = require('puppeteer');
-let page, browser
+const getActions = require('./getActions').getActions;
+const getPreviousActions = require('./getActions').getPreviousActions;
 
-//scrapForm RETORNA CONTENIDO EN FORMATO HTML o TXT !!!!!!!!!
 
-const scrapForm = async (url) => {
-  /* crea una instancia nueva de chronium */
-  browser = await puppeteer.launch({ args: ["--disabled-setupid-sandbox", '--disable-gpu',
-  '--disable-dev-shm-usage',
-  '--disable-setuid-sandbox',
-  '--no-first-run',
-  '--no-sandbox',
-  '--no-zygote',
-  '--single-process',
-] });
-  /* se abre una pagina nueva */
-  page = await browser.newPage();
-  page.setDefaultNavigationTimeout(0);
-  /* va a la pagina y espera a que se cargue todo */
-  await page.goto(url);
-  /* Busca los campos solicitados y los retorna depenmdiendo del argumento pasado en la linea de codigo*/
-  const preguntas = await page.$eval('form', contenido => contenido.outerHTML)
-  await browser.close();
-  return preguntas
-};
+async function scrapForm(URL) {
+  const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
+  const page = await browser.newPage();
+
+  await page.goto(URL, {
+    waitUntil: 'networkidle0'
+  });
+
+  // Previousl actions refers to clicks needed before the form is fully rendered
+
+  await page.evaluate(getPreviousActions(URL));
+
+
+  // Posible solución: https://github.com/puppeteer/puppeteer/issues/5328
+  await page.waitFor(10000);
+
+  const rawHTML = await page.evaluate(getActions(URL));
+
+  // for testing purposes
+  // console.log(rawHTML);
+
+  return rawHTML;
+
+  browser.close();
+}
+
+// for testing pourposes
+// getHTML('https://jobs.smartrecruiters.com/Visa/743999746639954-software-developer-java');
+
 
 exports.scrapForm = scrapForm
