@@ -64,7 +64,7 @@
   <script src="js/mixitup.js"></script>
 
   <script>
-      fetch("http://127.0.0.1:3000/api/status")
+      fetch("http://localhost:3000/api/status")
       .then(response => response.json())
       .then(function(data){
           if (data.status === "OK") {
@@ -74,6 +74,7 @@
 
       $(".header__button").click(function() {
         let joburl = $(".url_field").val()
+        $("#questionsform").empty()
         $("#questionsform").append("<div class='chargeqst' id='chargequestions'></div>")
         $("#chargequestions").append("<h1 id='chargetext'></h1>")
         $("#chargetext").text("Charging")
