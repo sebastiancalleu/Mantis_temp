@@ -1,6 +1,49 @@
 // This module has functions that performs the required actions for
 // navigate to the screening questions.
 
+
+// class definition
+class atsActions {
+  constructor(prevTarget, coreTarget) {
+    this.prevTarget = prevTarget;
+    this.coreTarget = coreTarget;
+  }
+
+  prevActions() {
+    if (this.prevTarget) {
+      return () => {
+        document.querySelector(this.prevTarget).click();
+      };
+    } else {
+      return () => { };
+    }
+  };
+
+  coreAction() {
+    return () => {
+      const rawHTML = document.querySelector().outerHTML;
+      return rawHTML;
+    }
+  }
+}
+
+const actions = composeActions
+
+
+
+const greenhouse = {
+
+  previousActions: [{ selector: null, action: null }],
+  coreAction: [{
+    selector: 'form',
+    action: (sel)
+  }],
+
+
+}
+
+availableAts = [list of objects]
+
 function getPreviousActions(URL) {
   if (URL.includes('jobvite.com')) {
     return jobvitePreviousActions;
