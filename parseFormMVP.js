@@ -22,25 +22,48 @@ async function getJSON(URL) {
   await PlainHTML(URL)
     .then((formHTML) => {
       const $ = cheerio.load(formHTML);
+      if (URL.includes('workable.com')) {
+        $('input').each((i, element) => {
+          if (element.attribs.type != 'hidden') {
+            let tmpObj = {
+              name: (element.attribs.name || element.attribs['data-ui']),
+              type: element.attribs.type
+            }
+            fieldsArray.push(tmpObj);
+          }
+        });  
+      } else if (URL.includes('greenhouse.io')) {
+        $('h1').each((i, element) => {
 
-      $('input').each((i, element) => {
-
-        if ($(element)['0'].attribs.type != 'hidden') {
-          let aux = $(element).siblings('label').contents().first().text();
-          if (aux[0] === '\n') {
-            aux = aux.split('\n')[1].trim()
+          let aux = $(element).text();
+          tmpObj = {
+            name: aux,
+            type: "title"
+          };
+            fieldsArray.push(tmpObj);
+        });
+        $('.asterisk').each((i, element) => {
+          let aux = $(element)['0'].prev.data.trim();
+          let tipo;
+          if ($(element).siblings('select').text().length !== 0){
+            tipo = 'select' + "\n" + $(element).siblings('select').text()
+          } else {
+            tipo = 'text'
           }
           tmpObj = {
             name: aux,
-            type: $(element)['0'].name
+            type: tipo,
           };
-
-          if (tmpObj.name !== '') {
+          if (tmpObj.name != '') {
             fieldsArray.push(tmpObj);
           }
-
-        }
-      });
+        });
+      } else if (URL.includes('jobs.lever.co')) {
+        $('input').each((i, element) => {
+          console.log(formHTML)
+          console.log(element)
+        });
+      }
 
     });
   return fieldsArray;
