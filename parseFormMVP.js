@@ -1,7 +1,7 @@
 const scrapForm = require('./getHTML').scrapForm;
 const cheerio = require('cheerio');
 
-const URL_a = 'https://www.comeet.com/jobs/allot/C4.009/software-development-engineer/0B.E15';
+const URL_a = 'https://linio.applytojob.com/apply/lZObkYJzpf/COLOMBIA-Practicante-rea-Marketing';
 
 async function PlainHTML(URL_d) {
   try {
@@ -21,7 +21,6 @@ async function getJSON(URL) {
 
   await PlainHTML(URL)
     .then((formHTML) => {
-      console.log(formHTML)
       const $ = cheerio.load(formHTML);
       if (URL.includes('workable.com')) {
         $('input').each((i, element) => {
@@ -99,9 +98,10 @@ async function getJSON(URL) {
             fieldsArray.push(tmpObj);
           }
         })
-        if (fieldsArray.length != 4) {
-          fieldsArray.length = 0
-        } 
+        // control de version generica
+        // if (fieldsArray.length != 4) {
+        //   fieldsArray.length = 0
+        // } 
       } else if (URL.includes('applytojob.com')) {
         let count = 0
         $('.asterisk').each(() => {
@@ -118,10 +118,11 @@ async function getJSON(URL) {
           fieldsArray.push(tmpObj)
           }
         })
-        if (count != 6) {
-          fieldsArray.length = 0
-          count = 0
-        }
+        // control de version generica
+        // if (count != 6) {
+        //   fieldsArray.length = 0
+        //   count = 0
+        // }
       } else if (URL.includes('careers-page.com')) {
         console.log()
         $('input').each((i, element) => {

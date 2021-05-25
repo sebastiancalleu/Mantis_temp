@@ -44,7 +44,7 @@ async function scrapForm(URL) {
 
   const rawHTML = await page.evaluate(atsActions.coreAction());
 
-  console.log(rawHTML);
+  // console.log(rawHTML);
 
 
 
@@ -52,12 +52,12 @@ async function scrapForm(URL) {
 
 
   browser.close();
-  // return rawHTML;
+  return rawHTML;
 
 }
 
 // for testing pourposes
-scrapForm('https://linio.applytojob.com/apply/lZObkYJzpf/COLOMBIA-Practicante-rea-Marketing');
+// scrapForm('https://linio.applytojob.com/apply/lZObkYJzpf/COLOMBIA-Practicante-rea-Marketing');
 
 
 exports.scrapForm = scrapForm
