@@ -24,7 +24,7 @@ async function getJSON(URL) {
       const $ = cheerio.load(formHTML);
       if (URL.includes('workable.com')) {
         $('input').each((i, element) => {
-          if (element.attribs.type != 'hidden') {
+          if (element.attribs.type != 'hidden' && element.attribs.required === '') {
             let tmpObj = {
               name: (element.attribs.name || element.attribs['data-ui']),
               type: element.attribs.type

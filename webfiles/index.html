@@ -94,7 +94,7 @@
             console.log(data)
             for (question in data) {
                 $("#questionsform").append("<div class='questions' id='question" + question + "'></div>")
-                $("#question" + question).append("<" + data[question].type + "\>")
+                $("#question" + question).append("<input type='" + data[question].type + "'\>")
                 $("#question" + question).append("<label class='questionlabel'>" + data[question].name + "</label>")
             }
         })
