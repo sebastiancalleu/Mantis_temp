@@ -61,6 +61,8 @@ function getActions(URL) {
     return ashbyhqActions;
   } else if (URL.includes('smartrecruiters.com')) {
     return smartrecruitersActions;
+  } else if (URL.includes('comeet.com')) {
+    return comeetActions;
   }
 }
 
@@ -117,6 +119,12 @@ const ashbyhqActions = () => {
 
 const smartrecruitersActions = () => {
   const rawHTML = document.querySelector('oc-oneclick-form').outerHTML;
+  return rawHTML;
+}
+
+const comeetActions = () => {
+  document.querySelector('#showApplyForm').click();
+  const rawHTML = document.querySelector('.form-horizontal').outerHTML;
   return rawHTML;
 }
 
