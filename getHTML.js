@@ -9,12 +9,9 @@ const getPreviousActions = require('./getActions').getPreviousActions;
 async function scrapForm(URL) {
   browser = await puppeteer.launch({
     args: ["--disabled-setupid-sandbox", '--disable-gpu',
-      '--disable-dev-shm-usage',
-      '--disable-setuid-sandbox',
-      '--no-first-run',
-      '--no-sandbox',
-      '--no-zygote',
-      '--single-process',
+      '--disable-dev-shm-usage', '--disable-setuid-sandbox',
+      '--no-first-run', '--no-sandbox',
+      '--no-zygote', '--single-process',
     ]
   });
   const page = await browser.newPage();
@@ -25,29 +22,34 @@ async function scrapForm(URL) {
 
   const atsActions = getActions(URL);
 
+  // If the ats Object has previous Target some clicks are needed
   if (atsActions.prevTarget) {
     await page.evaluate(atsActions.prevActions());
-    await page.waitFor(10000);
+
+    // About this solution (https://github.com/puppeteer/puppeteer/issues/5328)
+    let lastResponse = Math.floor(new Date() / 1000)
+    page.on("response", res => {
+      lastResponse = Math.floor(new Date() / 1000)
+    })
+    await new Promise(async resolve => {
+      let checkResponseInterval = await setInterval(() => {
+        if (Math.floor(new Date() / 1000) - 2 >= lastResponse) {
+          clearInterval(checkResponseInterval)
+          resolve()
+        }
+      }, 1000)
+    })
+
   }
 
-  // console.log((atsActions.coreTarget))
-  //console.log(atsActions.coreAction.toString());
+
   const rawHTML = await page.evaluate(atsActions.coreAction());
 
   console.log(rawHTML);
 
-  // Previousl actions refers to clicks needed before the form is fully rendered
-
-  //await page.evaluate(getPreviousActions(URL));
 
 
-  // Posible solución: https://github.com/puppeteer/puppeteer/issues/5328
-  //await page.waitFor(10000);
-
-  //const rawHTML = await page.evaluate(getActions(URL));
-
-  // for testing purposes
-  // console.log(rawHTML);
+  // Posible solución: 
 
 
   browser.close();
@@ -56,7 +58,7 @@ async function scrapForm(URL) {
 }
 
 // for testing pourposes
-scrapForm('https://boards.greenhouse.io/twitch/jobs/5166466002');
+scrapForm('https://www.comeet.com/jobs/allot/C4.009/software-development-engineer/0B.E15');
 
 
 exports.scrapForm = scrapForm
