@@ -2,13 +2,12 @@
 // navigate to the screening questions.
 
 
-// class definition
+
 class atsActions {
   constructor(prevTarget, coreTarget) {
     this.prevTarget = prevTarget;
     this.coreTarget = coreTarget;
   }
-
   prevActions() {
     if (this.prevTarget) {
       return `document.querySelector('${this.prevTarget}').click()`;
