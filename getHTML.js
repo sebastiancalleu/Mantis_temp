@@ -9,12 +9,9 @@ const getPreviousActions = require('./getActions').getPreviousActions;
 async function scrapForm(URL) {
   browser = await puppeteer.launch({
     args: ["--disabled-setupid-sandbox", '--disable-gpu',
-      '--disable-dev-shm-usage',
-      '--disable-setuid-sandbox',
-      '--no-first-run',
-      '--no-sandbox',
-      '--no-zygote',
-      '--single-process',
+      '--disable-dev-shm-usage', '--disable-setuid-sandbox',
+      '--no-first-run', '--no-sandbox',
+      '--no-zygote', '--single-process',
     ]
   });
   const page = await browser.newPage();
@@ -23,27 +20,44 @@ async function scrapForm(URL) {
     waitUntil: 'networkidle0'
   });
 
-  // Previousl actions refers to clicks needed before the form is fully rendered
+  const atsActions = getActions(URL);
 
-  await page.evaluate(getPreviousActions(URL));
+  // If the ats Object has previous Target some clicks are needed
+  if (atsActions.prevTarget) {
+    await page.evaluate(atsActions.prevActions());
+
+    // About this solution (https://github.com/puppeteer/puppeteer/issues/5328)
+    let lastResponse = Math.floor(new Date() / 1000)
+    page.on("response", res => {
+      lastResponse = Math.floor(new Date() / 1000)
+    })
+    await new Promise(async resolve => {
+      let checkResponseInterval = await setInterval(() => {
+        if (Math.floor(new Date() / 1000) - 2 >= lastResponse) {
+          clearInterval(checkResponseInterval)
+          resolve()
+        }
+      }, 1000)
+    })
+
+  }
+
+  const rawHTML = await page.evaluate(atsActions.coreAction());
+
+  console.log(rawHTML);
 
 
-  // Posible solución: https://github.com/puppeteer/puppeteer/issues/5328
-  await page.waitFor(5000);
 
-  const rawHTML = await page.evaluate(getActions(URL));
-
-  // for testing purposes
-  // console.log(rawHTML);
+  // Posible solución: 
 
 
   browser.close();
-  return rawHTML;
+  // return rawHTML;
 
 }
 
 // for testing pourposes
-// scrapForm('https://aldingerco.bamboohr.com/jobs/view.php?id=48');
+scrapForm('https://www.comeet.com/jobs/allot/C4.009/software-development-engineer/0B.E15');
 
 
 exports.scrapForm = scrapForm
