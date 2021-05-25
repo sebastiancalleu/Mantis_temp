@@ -28,11 +28,13 @@ const jobvite = () => { return (new atsActions('.jv-button-apply', 'form')) };
 const lever = () => { return (new atsActions('.postings-btn', 'form')) };
 const bamboo = () => { return (new atsActions('.fab-Button', 'form')) };
 const breezy = () => { return (new atsActions('.apply', 'form')) };
-const applytojob = () => { return (new atsActions(null, '#resumator-application-form')) };
+const applytojob = () => { return (new atsActions(null, 'aside')) };
 const careers = () => { return (new atsActions('.btn-lg', 'form')) };
+const smartrecruiters = () => { return (new atsActions('#st-apply', 'oc-oneclick-form')) };
+
 // Ahsbyhq has an issue with target selectors avoid use it for the moment
 const ashbyhq = () => { return (new atsActions('.JobPosting_tab__2PW7p', '.JobPosting_section__m7PMk')) };
-const smartrecruiters = () => { return (new atsActions('#st-apply', 'oc-oneclick-form')) };
+// comeet has a problem due to an Iframe avoid using 
 const comeet = () => { return (new atsActions('#showApplyForm', '#jobFormWrapper')) };
 
 const availableAts = [

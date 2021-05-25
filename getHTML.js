@@ -58,7 +58,7 @@ async function scrapForm(URL) {
 }
 
 // for testing pourposes
-scrapForm('https://www.comeet.com/jobs/allot/C4.009/software-development-engineer/0B.E15');
+scrapForm('https://linio.applytojob.com/apply/lZObkYJzpf/COLOMBIA-Practicante-rea-Marketing');
 
 
 exports.scrapForm = scrapForm
