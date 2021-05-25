@@ -42,7 +42,6 @@ async function scrapForm(URL) {
 
   }
 
-
   const rawHTML = await page.evaluate(atsActions.coreAction());
 
   console.log(rawHTML);
