@@ -153,14 +153,47 @@ html,body {
   background-color: green;
   border-radius: 30px;
   display: inline-block;
-  font-size: 10px;
+  font-size: 15px;
   color: white;
   font-family: Roboto-Light;
   font-weight: bold;
   margin-top: 30px;
-  height: 35px;
+  height: 50px;
   text-align: center;
   border-width: 0;
+}
+
+.send_button {
+  padding: 8px 17px;
+  background-color: green;
+  border-radius: 30px;
+  display: inline-block;
+  font-size: 15px;
+  color: white;
+  font-family: Roboto-Light;
+  font-weight: bold;
+  margin-top: 30px;
+  height: 50px;
+  text-align: center;
+  border-width: 0;
+  margin-bottom: 20px;
+  margin-left: 130px;  
+}
+
+input[type=text] {
+    color: black;
+}
+
+input[type=email] {
+    color: black;
+}
+
+input[type=tel] {
+    color: black;
+}
+
+#submit {
+    margin-bottom: 30px;
 }
 
 .navbar .navbar-nav > li > a, .navbar .navbar-brand, .navbar .navbar-nav > li > a:focus{

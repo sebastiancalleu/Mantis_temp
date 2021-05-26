@@ -96,6 +96,11 @@
                 $("#question" + question).append("<input type='" + data[question].type + "'\>")
                 $("#question" + question).append("<label class='questionlabel'>" + data[question].name + "</label>")
             }
+            $('#questionsform').append("<button class='send_button'>Submit Application</button>")
+            $('.send_button').click(function() {
+              $('#questionsform').append("<div id='submit'></div>")
+              $('#submit').append("<span class='header__content__block'>Application submit succesfully</span>")
+            })
         })
       })
 
