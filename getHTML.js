@@ -1,9 +1,11 @@
-// This module has a function that retrieves the html of a given URL
+// This module has a function that retrieves the form's html of a given URL
 // It uses puppeteer for wait for all the HTML to be complete generated
 
+require('dotenv').config();
 const puppeteer = require('puppeteer');
 const getActions = require('./getActions').getActions;
-
+const ZYTE_TOKEN = process.env.ZYTE_TOK;
+console.log(ZYTE_TOKEN)
 /**
  * This function resturns the raw HTML of Screening Questions form of available ATS
  * 
@@ -11,38 +13,45 @@ const getActions = require('./getActions').getActions;
  */
 
 async function scrapForm(URL) {
-  browser = await puppeteer.launch({
-    args: ["--disabled-setupid-sandbox", '--disable-gpu',
-      '--disable-dev-shm-usage', '--disable-setuid-sandbox',
-      '--no-first-run', '--no-sandbox',
-      '--no-zygote', '--single-process',
-    ]
-  });
-  const page = await browser.newPage();
+  try {
+    browser = await puppeteer.launch({
+      ignoreHTTPSErrors: true,
+      args: ["--disabled-setupid-sandbox", '--disable-gpu',
+        '--disable-dev-shm-usage', '--disable-setuid-sandbox',
+        '--no-first-run', '--no-sandbox',
+        '--no-zygote', '--single-process',
+        '--proxy-server=http://proxy.crawlera.com:8010'
+      ]
+    });
+    const page = await browser.newPage();
 
-  await page.goto(URL, {
-    waitUntil: 'networkidle0'
-  });
+    //await page.setExtraHTTPHeaders({
+    //  'Proxy-Authorization': 'Basic ' + Buffer.from(`${ZYTE_TOKEN}`).toString('base64'),
+    //});
 
-  const atsActions = getActions(URL);
+    await page.goto(URL, {
+      waitUntil: 'networkidle0'
+    });
 
-  // If the ats Object has previous Target some clicks are needed
-  if (atsActions.prevTarget) {
-    await page.evaluate(atsActions.prevActions());
-    await waitUntil(page);
+    const atsActions = getActions(URL);
+
+    // If the ats Object has previous Target some clicks are needed
+    if (atsActions.prevTarget) {
+      await page.evaluate(atsActions.prevActions());
+      await waitUntilLoaded(page);
+    }
+
+    const rawHTML = await page.evaluate(atsActions.coreAction());
+
+    console.log(rawHTML);
+
+    browser.close();
+    // return rawHTML;
+
+  } catch (err) {
+    browser.close();
+    console.log(err);
   }
-
-  const rawHTML = await page.evaluate(atsActions.coreAction());
-
-  console.log(rawHTML);
-
-
-
-  // Posible solución: 
-
-
-  browser.close();
-  // return rawHTML;
 
 }
 
@@ -54,7 +63,7 @@ async function scrapForm(URL) {
  * @param {pupeteer-page} page: The page you want to wait until loaded. 
  */
 
-async function waitUntil(page) {
+async function waitUntilLoaded(page) {
 
   // About this solution (https://github.com/puppeteer/puppeteer/issues/5328)
 
@@ -74,7 +83,7 @@ async function waitUntil(page) {
 }
 
 // for testing pourposes
-scrapForm('https://jobs.lever.co/landing/73727237-99cb-4967-9a03-0a793e2747e1');
+scrapForm('https://boards.greenhouse.io/twitch/jobs/5224555002');
 
 
 exports.scrapForm = scrapForm
