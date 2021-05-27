@@ -2,7 +2,6 @@
 // navigate to the screening questions.
 
 
-
 class atsActions {
   constructor(prevTarget, coreTarget) {
     this.prevTarget = prevTarget;
