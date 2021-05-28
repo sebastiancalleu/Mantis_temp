@@ -26,11 +26,21 @@ async function getJSON(URL) {
         $('input').each((i, element) => {
           if (element.attribs.type != 'hidden' && element.attribs.required === '') {
             let tmpObj = {
+              format: "write",
+              options: [],
+              
               name: (element.attribs.name || element.attribs['data-ui']),
               type: element.attribs.type
             }
             fieldsArray.push(tmpObj);
           }
+        })
+         $('textarea').each((i, element) => {
+          let tmpObj1 = {
+            name: element.attribs.name,
+            type: "textarea"
+          }
+          fieldsArray.push(tmpObj1);
         });  
       } else if (URL.includes('greenhouse.io')) {
         $('h1').each((i, element) => {
