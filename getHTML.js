@@ -4,8 +4,8 @@
 require('dotenv').config();
 const puppeteer = require('puppeteer');
 const getActions = require('./getActions').getActions;
-const ZYTE_TOKEN = process.env.ZYTE_TOK;
-console.log(ZYTE_TOKEN)
+// const ZYTE_TOKEN = process.env.ZYTE_TOK;
+
 /**
  * This function resturns the raw HTML of Screening Questions form of available ATS
  * 
@@ -19,15 +19,10 @@ async function scrapForm(URL) {
       args: ["--disabled-setupid-sandbox", '--disable-gpu',
         '--disable-dev-shm-usage', '--disable-setuid-sandbox',
         '--no-first-run', '--no-sandbox',
-        '--no-zygote', '--single-process',
-        '--proxy-server=http://proxy.crawlera.com:8010'
+        '--no-zygote', '--single-process'
       ]
     });
     const page = await browser.newPage();
-
-    //await page.setExtraHTTPHeaders({
-    //  'Proxy-Authorization': 'Basic ' + Buffer.from(`${ZYTE_TOKEN}`).toString('base64'),
-    //});
 
     await page.goto(URL, {
       waitUntil: 'networkidle0'
