@@ -31,7 +31,8 @@ async function getJSON(URL) {
             }
             fieldsArray.push(tmpObj);
           }
-        });  
+        });
+        // scrapper for greenhousepage working at 97%  
       } else if (URL.includes('greenhouse.io')) {
           $('.field').each((i, element) => {
             let aux;
