@@ -1,7 +1,7 @@
 const scrapForm = require('./getHTML').scrapForm;
 const cheerio = require('cheerio');
 
-const URL_a = 'https://linio.applytojob.com/apply/lZObkYJzpf/COLOMBIA-Practicante-rea-Marketing';
+const URL_a = 'https://boards.greenhouse.io/twitch/jobs/5132082002';
 
 async function PlainHTML(URL_d) {
   try {
@@ -33,32 +33,28 @@ async function getJSON(URL) {
           }
         });  
       } else if (URL.includes('greenhouse.io')) {
-        $('h1').each((i, element) => {
-
-          let aux = $(element).text();
-          tmpObj = {
-            name: aux,
-            type: "title"
-          };
+          $('.field').each((i, element) => {
+            let aux;
+            let tipo;
+            aux = element.children['0'].next.children[0].data.trim()
+            try {
+                if ($(element).find('select').text().length !== 0){
+                  tipo = 'select' + $(element).find('select').text()
+                } else if ($(element).find('input')['0'].attribs.type === 'hidden' || $(element).find('input')['0'].attribs.type ==='text') {
+                  tipo = 'text'
+                } else {
+                  tipo = 'file'
+                }
+            } catch(error) {
+              console.log('error')
+            }   
+            tmpObj = {
+              name: aux,
+              type: tipo,
+            };
             fieldsArray.push(tmpObj);
-        });
-        $('.asterisk').each((i, element) => {
-          let aux = $(element)['0'].prev.data.trim();
-          let tipo;
-          if ($(element).siblings('select').text().length !== 0){
-            tipo = 'select' + "\n" + $(element).siblings('select').text()
-          } else {
-            tipo = 'text'
-          }
-          tmpObj = {
-            name: aux,
-            type: tipo,
-          };
-          if (tmpObj.name != '') {
-            fieldsArray.push(tmpObj);
-          }
-        });
-      } else if (URL.includes('jobs.lever.co')) {
+          });
+        } else if (URL.includes('jobs.lever.co')) {
         $('input').each((i, element) => {
           if (element.attribs.type != 'hidden') {
             let aux;
