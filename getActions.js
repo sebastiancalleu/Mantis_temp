@@ -9,14 +9,14 @@ class atsActions {
   }
   prevActions() {
     if (this.prevTarget) {
-      return `document.querySelector('${this.prevTarget}').click()`;
+      return [`document.querySelector('${this.prevTarget}').click()`];
     } else {
       return () => { };
     }
   };
 
-  coreAction() {
-    return `document.querySelector('${this.coreTarget}').outerHTML`;
+  coreActions() {
+    return [`document.querySelector('${this.coreTarget}').outerHTML`];
   };
 }
 

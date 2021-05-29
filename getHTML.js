@@ -32,12 +32,17 @@ async function scrapForm(URL) {
 
     // If the ats Object has previous Target some clicks are needed
     if (atsActions.prevTarget) {
-      await page.evaluate(atsActions.prevActions());
-      await waitUntilLoaded(page);
+      for (element of atsActions.prevActions()) {
+        await page.evaluate(atsActions.prevActions());
+        await waitUntilLoaded(page);
+      }
     }
 
-    const rawHTML = await page.evaluate(atsActions.coreAction());
-
+    let rawHTML = '';
+    for (element of atsActions.coreActions()) {
+      rawHTML = await page.evaluate(element);
+      await waitUntilLoaded(page);
+    }
     console.log(rawHTML);
 
     browser.close();
@@ -78,7 +83,7 @@ async function waitUntilLoaded(page) {
 }
 
 // for testing pourposes
-scrapForm('https://boards.greenhouse.io/twitch/jobs/5224555002');
+scrapForm('https://boards.greenhouse.io/pendo/jobs/5133420002');
 
 
 exports.scrapForm = scrapForm
