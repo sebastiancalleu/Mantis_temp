@@ -33,15 +33,15 @@ async function scrapForm(URL) {
     // If the ats Object has previous Target some clicks are needed
     if (atsActions.prevTarget) {
       for (element of atsActions.prevActions()) {
-        await page.evaluate(atsActions.prevActions());
+        await page.evaluate(element);
         await waitUntilLoaded(page);
       }
     }
 
-    let rawHTML = '';
+    let rawHTML;
     for (element of atsActions.coreActions()) {
       rawHTML = await page.evaluate(element);
-      await waitUntilLoaded(page);
+
     }
     console.log(rawHTML);
 
@@ -56,7 +56,7 @@ async function scrapForm(URL) {
 }
 
 /**
- * This function waits until the page has not response for 2 seconds
+ * This function waits until the page has not new response for 2 seconds
  * it is important because sometimes puppeteer don't wait for elements 
  * to be fully loaded after an action
  * 
@@ -83,7 +83,7 @@ async function waitUntilLoaded(page) {
 }
 
 // for testing pourposes
-scrapForm('https://boards.greenhouse.io/pendo/jobs/5133420002');
 
+scrapForm('https://jobs.jobvite.com/universalmusicgroup/job/ozEeffwq');
 
 exports.scrapForm = scrapForm

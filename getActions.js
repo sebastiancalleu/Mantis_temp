@@ -1,28 +1,40 @@
 // This module has functions that performs the required actions for
 // navigate to the screening questions.
 
+const getSpecialActions = require('./getSpecialActions').getSpecialActions;
 
 class atsActions {
-  constructor(prevTarget, coreTarget) {
+  constructor(prevTarget, coreTarget, specialActionsSet) {
     this.prevTarget = prevTarget;
     this.coreTarget = coreTarget;
+    this.specialActions = getSpecialActions(specialActionsSet);
   }
+
   prevActions() {
-    if (this.prevTarget) {
+    if (this.specialActions.prevActions) {
+      return this.specialActions.prevActions;
+    } else if (this.prevTarget) {
       return [`document.querySelector('${this.prevTarget}').click()`];
     } else {
       return () => { };
     }
-  };
+  }
 
   coreActions() {
-    return [`document.querySelector('${this.coreTarget}').outerHTML`];
-  };
+    if (this.specialActions.coreActions) {
+      return this.specialActions.coreActions;
+    } else if (this.coreTarget) {
+      return [`document.querySelector('${this.coreTarget}').outerHTML`];
+    } else {
+      return () => { };
+    }
+  }
+
 }
 
-const greenhouse = () => { return (new atsActions(null, 'form')) };
-const workable = () => { return (new atsActions('[data-ui="application-form-tab"]', 'form')) };
-const jobvite = () => { return (new atsActions('.jv-button-apply', 'form')) };
+const greenhouse = () => { return (new atsActions(null, 'form', null)) };
+const workable = () => { return (new atsActions('[data-ui="application-form-tab"]', 'form', null)) };
+const jobvite = () => { return (new atsActions('.jv-button-apply', 'form', 'jobvite')) };
 const lever = () => { return (new atsActions('.postings-btn', 'form')) };
 const bamboo = () => { return (new atsActions('.fab-Button', 'form')) };
 const breezy = () => { return (new atsActions('.apply', 'form')) };
