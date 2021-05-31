@@ -1,7 +1,7 @@
 const scrapForm = require('./getHTML').scrapForm;
 const cheerio = require('cheerio');
 
-const URL_a = 'https://boards.greenhouse.io/twitch/jobs/5132082002';
+const URL_a = 'https://lumenvox.bamboohr.com/jobs/view.php?id=34';
 
 async function PlainHTML(URL_d) {
   try {
@@ -137,32 +137,32 @@ async function getJSON(URL) {
           }
         })
       } else if (URL.includes('bamboohr.com')) {
-        $('label').each((i, element) => {
-          if (($(element).text())){
-            let aux = $(element).text();
-            let tipo;
-            if ($(element).siblings().children()['0'].attribs.type !== undefined){
-              tipo = $(element).siblings().children()['0'].attribs.type;
-            } else {
+        $('div label').each((i, element) => {
+          let aux;
+          let tipo;  
+          if ($(element)['0'].children[0].parent.attribs.class !== 'placeholder noclick') {
+            aux = (i, $(element)['0'].children[0].data); 
               try {
-                if (aux === 'Resume') {
-                  tipo = 'file'
-                } else {
-                  tipo = $(element).siblings().children()['0'].children[1].name;
+                if ($(element).next()['0'].children[0].next.name  == 'textarea') {
+                  tipo = ('text');
                 }
               } catch (error) {
-                if (($(element).siblings().children()['0'].attribs.class).includes('Textarea')) {
-                  tipo = "textarea"
+              } 
+              try {
+                if ($(element).next()['0'].children[0].attribs.type == 'text') {
+                  tipo = ('text');     
+                } else if ($(element).next()['0'].children[0].children[0].next.attribs.type == 'file') {
+                    tipo = ($(element).next()['0'].children[0].children[0].next.attribs.type);
                 } else {
-                  tipo = "no type defined"
-                }
+                    tipo = ($(element).parent()['0'].children['1'].children[0].children[0].next.name);
+                }  
+              } catch (error) {
               }
-            }
-            tmpObj = {
-              name: aux,
-              type: tipo,
-            };
-            fieldsArray.push(tmpObj);
+              let tmpObj = {
+                name: aux,
+                type: tipo,
+              };
+              fieldsArray.push(tmpObj);
           }
         });
       } else if (URL.includes('ashbyhq.com')) {
