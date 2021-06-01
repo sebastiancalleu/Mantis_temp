@@ -80,21 +80,12 @@ async function waitUntilLoaded(page) {
       }
     }, 1000)
   })
-
-
-  // console.log(rawHTML);
-
-  browser.close();
-  return rawHTML;
-
 }
 
 // for testing pourposes
 
-scrapForm('https://everli.recruitee.com/o/customer-service-shift-supervisor');
-// scrapForm('https://linio.applytojob.com/apply/lZObkYJzpf/COLOMBIA-Practicante-rea-Marketing');
 
 
-//scrapForm('https://everli.recruitee.com/o/customer-service-shift-supervisor');
+// scrapForm('https://lumenvox.bamboohr.com/jobs/view.php?id=34');
 
 exports.scrapForm = scrapForm
