@@ -1,7 +1,7 @@
 const scrapForm = require('./getHTML').scrapForm;
 const cheerio = require('cheerio');
 
-const URL_a = 'https://www.comeet.com/jobs/allot/C4.009/software-development-engineer/0B.E15';
+const URL_a = 'https://lumenvox.bamboohr.com/jobs/view.php?id=34';
 
 async function PlainHTML(URL_d) {
   try {
@@ -21,45 +21,44 @@ async function getJSON(URL) {
 
   await PlainHTML(URL)
     .then((formHTML) => {
-      console.log(formHTML)
       const $ = cheerio.load(formHTML);
       if (URL.includes('workable.com')) {
         $('input').each((i, element) => {
-          if (element.attribs.type != 'hidden') {
+          if (element.attribs.type != 'hidden' && element.attribs.required === '') {
             let tmpObj = {
+              format: "write",
+              options: [],
+              
               name: (element.attribs.name || element.attribs['data-ui']),
               type: element.attribs.type
             }
             fieldsArray.push(tmpObj);
           }
-        });  
+        });
+        // scrapper for greenhousepage working at 97% MISSING FILES - TYPE 
       } else if (URL.includes('greenhouse.io')) {
-        $('h1').each((i, element) => {
-
-          let aux = $(element).text();
-          tmpObj = {
-            name: aux,
-            type: "title"
-          };
+          $('.field').each((i, element) => {
+            let aux;
+            let tipo;
+            aux = element.children['0'].next.children[0].data.trim()
+            try {
+                if ($(element).find('select').text().length !== 0){
+                  tipo = 'select' + $(element).find('select').text()
+                } else if ($(element).find('input')['0'].attribs.type === 'hidden' || $(element).find('input')['0'].attribs.type ==='text') {
+                  tipo = 'text'
+                } else {
+                  tipo = 'file'
+                }
+            } catch(error) {
+              console.log('error')
+            }   
+            tmpObj = {
+              name: aux,
+              type: tipo,
+            };
             fieldsArray.push(tmpObj);
-        });
-        $('.asterisk').each((i, element) => {
-          let aux = $(element)['0'].prev.data.trim();
-          let tipo;
-          if ($(element).siblings('select').text().length !== 0){
-            tipo = 'select' + "\n" + $(element).siblings('select').text()
-          } else {
-            tipo = 'text'
-          }
-          tmpObj = {
-            name: aux,
-            type: tipo,
-          };
-          if (tmpObj.name != '') {
-            fieldsArray.push(tmpObj);
-          }
-        });
-      } else if (URL.includes('jobs.lever.co')) {
+          });
+        } else if (URL.includes('jobs.lever.co')) {
         $('input').each((i, element) => {
           if (element.attribs.type != 'hidden') {
             let aux;
@@ -99,9 +98,10 @@ async function getJSON(URL) {
             fieldsArray.push(tmpObj);
           }
         })
-        if (fieldsArray.length != 4) {
-          fieldsArray.length = 0
-        } 
+        // control de version generica
+        // if (fieldsArray.length != 4) {
+        //   fieldsArray.length = 0
+        // } 
       } else if (URL.includes('applytojob.com')) {
         let count = 0
         $('.asterisk').each(() => {
@@ -118,10 +118,11 @@ async function getJSON(URL) {
           fieldsArray.push(tmpObj)
           }
         })
-        if (count != 6) {
-          fieldsArray.length = 0
-          count = 0
-        }
+        // control de version generica
+        // if (count != 6) {
+        //   fieldsArray.length = 0
+        //   count = 0
+        // }
       } else if (URL.includes('careers-page.com')) {
         console.log()
         $('input').each((i, element) => {
@@ -139,32 +140,32 @@ async function getJSON(URL) {
           }
         })
       } else if (URL.includes('bamboohr.com')) {
-        $('label').each((i, element) => {
-          if (($(element).text())){
-            let aux = $(element).text();
-            let tipo;
-            if ($(element).siblings().children()['0'].attribs.type !== undefined){
-              tipo = $(element).siblings().children()['0'].attribs.type;
-            } else {
+        $('div label').each((i, element) => {
+          let aux;
+          let tipo;  
+          if ($(element)['0'].children[0].parent.attribs.class !== 'placeholder noclick') {
+            aux = (i, $(element)['0'].children[0].data); 
               try {
-                if (aux === 'Resume') {
-                  tipo = 'file'
-                } else {
-                  tipo = $(element).siblings().children()['0'].children[1].name;
+                if ($(element).next()['0'].children[0].next.name  == 'textarea') {
+                  tipo = ('text');
                 }
               } catch (error) {
-                if (($(element).siblings().children()['0'].attribs.class).includes('Textarea')) {
-                  tipo = "textarea"
+              } 
+              try {
+                if ($(element).next()['0'].children[0].attribs.type == 'text') {
+                  tipo = ('text');     
+                } else if ($(element).next()['0'].children[0].children[0].next.attribs.type == 'file') {
+                    tipo = ($(element).next()['0'].children[0].children[0].next.attribs.type);
                 } else {
-                  tipo = "no type defined"
-                }
+                    tipo = ($(element).parent()['0'].children['1'].children[0].children[0].next.name);
+                }  
+              } catch (error) {
               }
-            }
-            tmpObj = {
-              name: aux,
-              type: tipo,
-            };
-            fieldsArray.push(tmpObj);
+              let tmpObj = {
+                name: aux,
+                type: tipo,
+              };
+              fieldsArray.push(tmpObj);
           }
         });
       } else if (URL.includes('ashbyhq.com')) {

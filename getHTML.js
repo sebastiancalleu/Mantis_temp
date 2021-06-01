@@ -54,7 +54,6 @@ async function scrapForm(URL) {
     }
     return 'Plase review the URL seems like it is not a valid open position';
   }
-
 }
 
 /**
@@ -82,10 +81,20 @@ async function waitUntilLoaded(page) {
     }, 1000)
   })
 
+
+  // console.log(rawHTML);
+
+  browser.close();
+  return rawHTML;
+
 }
 
 // for testing pourposes
 
 scrapForm('https://everli.recruitee.com/o/customer-service-shift-supervisor');
+// scrapForm('https://linio.applytojob.com/apply/lZObkYJzpf/COLOMBIA-Practicante-rea-Marketing');
+
+
+//scrapForm('https://everli.recruitee.com/o/customer-service-shift-supervisor');
 
 exports.scrapForm = scrapForm
