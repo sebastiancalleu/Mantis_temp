@@ -26,6 +26,9 @@ async function getJSON(URL) {
         $('input').each((i, element) => {
           if (element.attribs.type != 'hidden' && element.attribs.required === '') {
             let tmpObj = {
+              format: "write",
+              options: [],
+              
               name: (element.attribs.name || element.attribs['data-ui']),
               type: element.attribs.type
             }
