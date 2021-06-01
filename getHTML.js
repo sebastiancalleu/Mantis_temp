@@ -43,10 +43,10 @@ async function scrapForm(URL) {
       rawHTML += await page.evaluate(element);
       await waitUntilLoaded(page);
     }
-    //console.log(rawHTML);
+    console.log(rawHTML);
 
     browser.close();
-    return rawHTML;
+    //return rawHTML;
 
   } catch (err) {
     if (browser) {
@@ -86,6 +86,6 @@ async function waitUntilLoaded(page) {
 
 // for testing pourposes
 
-//scrapForm('https://everli.recruitee.com/o/customer-service-shift-supervisor');
+scrapForm('https://everli.recruitee.com/o/customer-service-shift-supervisor');
 
 exports.scrapForm = scrapForm
