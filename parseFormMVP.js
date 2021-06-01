@@ -1,7 +1,7 @@
 const scrapForm = require('./getHTML').scrapForm;
 const cheerio = require('cheerio');
 
-// const URL_a = 'https://lumenvox.bamboohr.com/jobs/view.php?id=34';
+const URL_a = 'https://jobs.ashbyhq.com/Zendar/7f8e1e65-606a-42ac-83c4-ab803e98f512/application';
 
 async function PlainHTML(URL_d) {
   try {
@@ -187,6 +187,50 @@ async function getJSON(URL) {
           }
         });
       } else if (URL.includes('ashbyhq.com')) {
+        $('div label').each((i, element) => {
+          let aux;
+          let tipo;
+          try {
+            if (! $(element)['0'].prev) {
+              aux = $(element)['0'].children[0].data
+            }
+          } catch (error) {
+          }
+          try {
+            if ($(element)['0'].next.attribs.type == 'text' || $(element)['0'].next.attribs.type == 'email'){
+              tipo = 'text'
+            } else if ($(element)['0'].next.children[0].attribs['type'] == 'file') {
+              tipo = 'file'
+            } else if ($(element)['0'].next.children[0].children[0].next.attribs['type'] == 'checkbox'){
+              tipo = 'checkbox'
+              aux = $(element)['0'].children[0].data                                          
+            } else {
+              tipo = 'select'
+            }
+          } catch (error) {
+            try {
+              if ($(element)['0'].next.children['0']){
+                tipo = $(element)['0'].next.children['0'].name
+              }
+            } catch (error) {
+              tipo = 'text'
+            }              
+          }
+          try {
+            if ( $(element)['0'].prev) {
+              aux = $(element)['0'].children[0].data
+              tipo = $(element)['0'].prev.children[0].next.attribs.type
+            }
+          } catch (error) {
+          }
+            let tmpObj = {
+              name: aux,
+              type: tipo,
+            };
+            if (aux !== undefined) {
+              fieldsArray.push(tmpObj);
+            }
+        });
 
       } else if (URL.includes('smartrecruiters.com')) {
         // este sitio queda en pausa debido a que se necesita dar click para seguir con el formulario
@@ -211,9 +255,9 @@ async function getJSON(URL) {
   return fieldsArray;
 }
 
-// (async (URL_b) => {
-//   const MyJSON = await getJSON(URL_b);
-//   console.log(MyJSON)
-// })(URL_a);
+(async (URL_b) => {
+  const MyJSON = await getJSON(URL_b);
+  console.log(MyJSON)
+})(URL_a);
 
 exports.getJSON = getJSON;
