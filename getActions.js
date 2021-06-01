@@ -35,17 +35,17 @@ class atsActions {
 const greenhouse = () => { return (new atsActions(null, 'form', null)) };
 const workable = () => { return (new atsActions('[data-ui="application-form-tab"]', 'form', null)) };
 const jobvite = () => { return (new atsActions('.jv-button-apply', 'form', 'jobvite')) };
-const lever = () => { return (new atsActions('.postings-btn', 'form')) };
-const bamboo = () => { return (new atsActions('.fab-Button', 'form')) };
-const breezy = () => { return (new atsActions('.apply', 'form')) };
-const applytojob = () => { return (new atsActions(null, 'aside')) };
-const careers = () => { return (new atsActions('.btn-lg', 'form')) };
-const smartrecruiters = () => { return (new atsActions('#st-apply', 'oc-oneclick-form')) };
+const lever = () => { return (new atsActions('.postings-btn', 'form', null)) };
+const bamboo = () => { return (new atsActions('.fab-Button', 'form', null)) };
+const breezy = () => { return (new atsActions('.apply', 'form', null)) };
+const applytojob = () => { return (new atsActions(null, '#job-application-form-container', null)) };
+const careers = () => { return (new atsActions('.btn-lg', 'form', null)) };
+const smartrecruiters = () => { return (new atsActions('#st-apply', 'oc-oneclick-form', null)) };
+const ashbyhq = () => { return (new atsActions('.Button_primary__I_9I9', '.JobPosting_section__m7PMk', null)) };
+const comeet = () => { return (new atsActions('#showApplyForm', '.form-container', 'comeet')) };
+const cvwarehouse = () => { return (new atsActions('a.important', '#signUp', null)) };
+const recruitee = () => { return (new atsActions('a.btn-thebiggest', '#new_candidate', null)) };
 
-// Ahsbyhq has an issue with target selectors avoid use it for the moment
-const ashbyhq = () => { return (new atsActions('.JobPosting_tab__2PW7p', '.JobPosting_section__m7PMk')) };
-// comeet has a problem due to an Iframe avoid using 
-const comeet = () => { return (new atsActions('#showApplyForm', '#jobFormWrapper')) };
 
 const availableAts = [
   greenhouse,
@@ -58,6 +58,8 @@ const availableAts = [
   ashbyhq,
   smartrecruiters,
   comeet,
+  cvwarehouse,
+  recruitee,
   careers
 ];
 

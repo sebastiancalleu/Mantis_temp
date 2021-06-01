@@ -40,17 +40,19 @@ async function scrapForm(URL) {
 
     let rawHTML;
     for (element of atsActions.coreActions()) {
-      rawHTML = await page.evaluate(element);
-
+      rawHTML += await page.evaluate(element);
+      await waitUntilLoaded(page);
     }
-    console.log(rawHTML);
+    //console.log(rawHTML);
 
     browser.close();
-    // return rawHTML;
+    return rawHTML;
 
   } catch (err) {
-    browser.close();
-    console.log(err);
+    if (browser) {
+      browser.close();
+    }
+    return 'Plase review the URL seems like it is not a valid open position';
   }
 
 }
@@ -84,6 +86,6 @@ async function waitUntilLoaded(page) {
 
 // for testing pourposes
 
-scrapForm('https://jobs.jobvite.com/universalmusicgroup/job/ozEeffwq');
+//scrapForm('https://everli.recruitee.com/o/customer-service-shift-supervisor');
 
 exports.scrapForm = scrapForm

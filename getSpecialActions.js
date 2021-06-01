@@ -24,6 +24,12 @@ const getSpecialActions = (atsName) => {
     actionsSet.coreActions = [
       `document.querySelector('form.ng-pristine').outerHTML`
     ]
+  } else if (atsName == 'comeet') {
+
+    actionsSet.prevActions = [
+      `window.location.href = document.querySelector('iframe').src`
+    ]
+
   }
   return actionsSet;
 }
