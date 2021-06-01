@@ -43,10 +43,10 @@ async function scrapForm(URL) {
       rawHTML += await page.evaluate(element);
       await waitUntilLoaded(page);
     }
-    //console.log(rawHTML);
+    console.log(rawHTML);
 
     browser.close();
-    return rawHTML;
+    //return rawHTML;
 
   } catch (err) {
     if (browser) {
@@ -81,7 +81,6 @@ async function waitUntilLoaded(page) {
     }, 1000)
   })
 
-  const rawHTML = await page.evaluate(atsActions.coreAction());
 
   // console.log(rawHTML);
 
@@ -92,6 +91,7 @@ async function waitUntilLoaded(page) {
 
 // for testing pourposes
 
+scrapForm('https://everli.recruitee.com/o/customer-service-shift-supervisor');
 // scrapForm('https://linio.applytojob.com/apply/lZObkYJzpf/COLOMBIA-Practicante-rea-Marketing');
 
 
