@@ -1,7 +1,7 @@
 const scrapForm = require('./getHTML').scrapForm;
 const cheerio = require('cheerio');
 
-const URL_a = 'https://lumenvox.bamboohr.com/jobs/view.php?id=34';
+// const URL_a = 'https://lumenvox.bamboohr.com/jobs/view.php?id=34';
 
 async function PlainHTML(URL_d) {
   try {
@@ -34,9 +34,16 @@ async function getJSON(URL) {
             }
             fieldsArray.push(tmpObj);
           }
-        });
-        // scrapper for greenhousepage working at 97% MISSING FILES - TYPE 
+        })
+         $('textarea').each((i, element) => {
+          let tmpObj1 = {
+            name: element.attribs.name,
+            type: "textarea"
+          }
+          fieldsArray.push(tmpObj1);
+        });  
       } else if (URL.includes('greenhouse.io')) {
+        // scrapper for greenhousepage working at 97% MISSING FILES - TYPE
           $('.field').each((i, element) => {
             let aux;
             let tipo;
@@ -144,7 +151,7 @@ async function getJSON(URL) {
           let aux;
           let tipo;  
           if ($(element)['0'].children[0].parent.attribs.class !== 'placeholder noclick') {
-            aux = (i, $(element)['0'].children[0].data); 
+            aux = $(element)['0'].children[0].data; 
               try {
                 if ($(element).next()['0'].children[0].next.name  == 'textarea') {
                   tipo = ('text');
@@ -193,9 +200,9 @@ async function getJSON(URL) {
   return fieldsArray;
 }
 
-(async (URL_b) => {
-  const MyJSON = await getJSON(URL_b);
-  console.log(MyJSON)
-})(URL_a);
+// (async (URL_b) => {
+//   const MyJSON = await getJSON(URL_b);
+//   console.log(MyJSON)
+// })(URL_a);
 
 exports.getJSON = getJSON;

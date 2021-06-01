@@ -43,10 +43,10 @@ async function scrapForm(URL) {
       rawHTML += await page.evaluate(element);
       await waitUntilLoaded(page);
     }
-    console.log(rawHTML);
+    // console.log(rawHTML);
 
     browser.close();
-    //return rawHTML;
+    return rawHTML;
 
   } catch (err) {
     if (browser) {
