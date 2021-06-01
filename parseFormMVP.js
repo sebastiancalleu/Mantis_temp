@@ -25,14 +25,25 @@ async function getJSON(URL) {
       if (URL.includes('workable.com')) {
         $('input').each((i, element) => {
           if (element.attribs.type != 'hidden' && element.attribs['data-ui'] != 'autofill-computer') {
-            let tmpObj = {
-              format: "write",
-              options: [],
-              
-              name: (element.attribs.name || element.attribs['data-ui']),
-              type: element.attribs.type
+            if (element.attribs.type === 'checkbox') {
+              let tmpObj = {
+                format: "write",
+                options: [],
+                
+                name: $(element).parent().siblings().text(),
+                type: element.attribs.type
+              }
+              fieldsArray.push(tmpObj);
+            } else {
+              let tmpObj = {
+                format: "write",
+                options: [],
+                
+                name: (element.attribs.name || element.attribs['data-ui']),
+                type: element.attribs.type
+              }
+              fieldsArray.push(tmpObj);  
             }
-            fieldsArray.push(tmpObj);
           }
         })
          $('textarea').each((i, element) => {
