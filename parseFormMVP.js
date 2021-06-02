@@ -1,7 +1,7 @@
 const scrapForm = require('./getHTML').scrapForm;
 const cheerio = require('cheerio');
 
-const URL_a = 'https://jobs.ashbyhq.com/Zendar/7f8e1e65-606a-42ac-83c4-ab803e98f512/application';
+// const URL_a = 'https://jobs.ashbyhq.com/Zendar/7f8e1e65-606a-42ac-83c4-ab803e98f512/application';
 
 async function PlainHTML(URL_d) {
   try {
@@ -25,30 +25,33 @@ async function getJSON(URL) {
       if (URL.includes('workable.com')) {
         $('input').each((i, element) => {
           if (element.attribs.type != 'hidden' && element.attribs['data-ui'] != 'autofill-computer') {
-            if (element.attribs.type === 'checkbox') {
-              let tmpObj = {
-                format: "write",
-                options: [],
-                
-                name: $(element).parent().siblings().text(),
-                type: element.attribs.type
-              }
-              fieldsArray.push(tmpObj);
+            let aux = ""
+            if (element.attribs['data-ui'] && element.attribs['data-ui'].includes("QA")) {
+              console.log("wtf")
+                aux = $(element).parent().siblings().text()
+            } else if (element.attribs.type === 'checkbox') {
+                aux = $(element).parent().siblings().text()
             } else {
-              let tmpObj = {
-                format: "write",
-                options: [],
-                
-                name: (element.attribs.name || element.attribs['data-ui']),
-                type: element.attribs.type
-              }
-              fieldsArray.push(tmpObj);  
+                aux = element.attribs.name || element.attribs['data-ui']
             }
+            let tmpObj = {
+              format: "write",
+              options: [],
+              
+              name: aux,
+              type: element.attribs.type
+            }
+            fieldsArray.push(tmpObj);  
           }
         })
          $('textarea').each((i, element) => {
+           let aux = ""
+           if (element.attribs.name.includes("QA")) {
+             let str1 = "#" + element.attribs['aria-labelledby']
+             aux = $(element).parent().parent().siblings().children(str1).text()
+            }
           let tmpObj1 = {
-            name: element.attribs.name,
+            name: aux,
             type: "textarea"
           }
           fieldsArray.push(tmpObj1);
@@ -255,9 +258,9 @@ async function getJSON(URL) {
   return fieldsArray;
 }
 
-(async (URL_b) => {
-  const MyJSON = await getJSON(URL_b);
-  console.log(MyJSON)
-})(URL_a);
+// (async (URL_b) => {
+//   const MyJSON = await getJSON(URL_b);
+//   console.log(MyJSON)
+// })(URL_a);
 
 exports.getJSON = getJSON;
