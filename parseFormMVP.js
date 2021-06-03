@@ -25,23 +25,39 @@ async function getJSON(URL) {
       if (URL.includes('workable.com')) {
         $('input').each((i, element) => {
           if (element.attribs.type != 'hidden' && element.attribs['data-ui'] != 'autofill-computer') {
-            let aux = ""
+            let aux = ''
+            let aux2 = ''
             if (element.attribs['data-ui'] && element.attribs['data-ui'].includes("QA")) {
               console.log("wtf")
-                aux = $(element).parent().siblings().text()
+              aux = $(element).parent().siblings().text()
+              aux2 = element.attribs.type
             } else if (element.attribs.type === 'checkbox') {
-                aux = $(element).parent().siblings().text()
+              aux = $(element).parent().siblings().text()
+              aux2 = element.attribs.type
+            } else if (element.attribs.type === 'radio') {
+              if ($(element).parent().siblings().text().includes('Y')) {
+                aux = $(element).parent().parent().parent().siblings().text()
+                aux2 = "yes/no"
+              }
             } else {
-                aux = element.attribs.name || element.attribs['data-ui']
+                if (element.attribs.name && element.attribs.name.includes("QA")) {
+                aux = $(element).parent().siblings().text()
+                aux2 = element.attribs.type
+              } else {
+              aux = element.attribs.name || element.attribs['data-ui']
+              aux2 = element.attribs.type
+              }
             }
-            let tmpObj = {
-              format: "write",
-              options: [],
-              
-              name: aux,
-              type: element.attribs.type
+            if (aux != '' && aux2 != '') {
+              let tmpObj = {
+                format: "write",
+                options: [],
+                
+                name: aux,
+                type: aux2
+              }
+              fieldsArray.push(tmpObj);  
             }
-            fieldsArray.push(tmpObj);  
           }
         })
          $('textarea').each((i, element) => {
