@@ -1,5 +1,5 @@
 const express = require("express");
-const getJSON = require('./parseFormMVP').getJSON;
+const getSQ = require('./screeningQuestions/allocator').getSQ;
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
@@ -25,7 +25,7 @@ app.get("/api/status", function(req, res){
 
 app.post("/api/inputurl", function(req, res){
   async function urljson() {
-      const mantisita = await getJSON(req.body.url)
+      const mantisita = await getSQ(req.body.url)
       return mantisita
 }
   const dct = urljson()
