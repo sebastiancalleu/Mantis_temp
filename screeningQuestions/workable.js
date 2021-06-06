@@ -21,17 +21,37 @@ async function getJSON(URL) {
         if (element.attribs.type != 'hidden' && element.attribs['data-ui'] != 'autofill-computer') {
           let aux = ''
           let aux2 = ''
+          let options1 = []
           if (element.attribs['data-ui'] && element.attribs['data-ui'].includes("QA")) {
-            console.log("wtf")
-            aux = $(element).parent().siblings().text()
+            aux = $(element).parent().parent().siblings().text()
             aux2 = element.attribs.type
           } else if (element.attribs.type === 'checkbox') {
             aux = $(element).parent().siblings().text()
             aux2 = element.attribs.type
           } else if (element.attribs.type === 'radio') {
-            if ($(element).parent().siblings().text().includes('Y')) {
+            if ($(element).parent().siblings().text().includes('Y') || $(element).siblings().text().includes('Y') || $(element).parent().siblings().text().includes('y') || $(element).siblings().text().includes('y')) {
               aux = $(element).parent().parent().parent().siblings().text()
               aux2 = "yes/no"
+              for (i of fieldsArray) {
+                if (i.name === aux) {
+                  aux = ""
+                  aux2 = ""
+                }
+              }
+            } else {
+              let aux3 = $(element).parent().parent().parent().siblings().text()
+              let flag = 0
+              for (i of fieldsArray) {
+                if (i.name === aux3) {
+                  i.options.push($(element).parent().siblings().text())
+                  flag = 1
+                }
+              }
+              if (flag === 0) {
+                aux = aux3
+                aux2 = "Multiplechoice"
+                options1.push($(element).parent().siblings().text())
+              }
             }
           } else {
               if (element.attribs.name && element.attribs.name.includes("QA")) {
@@ -45,7 +65,7 @@ async function getJSON(URL) {
           if (aux != '' && aux2 != '') {
             let tmpObj = {
               format: "write",
-              options: [],
+              options: options1,
               
               name: aux,
               type: aux2
@@ -56,9 +76,9 @@ async function getJSON(URL) {
       })
        $('textarea').each((i, element) => {
          let aux = ""
+         aux = $(element).parent().parent().siblings().text()
          if (element.attribs.name.includes("QA")) {
-           let str1 = "#" + element.attribs['aria-labelledby']
-           aux = $(element).parent().parent().siblings().children(str1).text()
+           aux = $(element).parent().parent().siblings().text()
           }
         let tmpObj1 = {
           name: aux,
