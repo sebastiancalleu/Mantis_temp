@@ -1,7 +1,7 @@
 {
   "name": "mantis",
   "version": "1.0.0",
-  "description": "",
+  "description": "MANTIS",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parse": "^0.1.0",
     "body-parser": "^1.19.0",
     "cheerio": "^0.22.0",
     "cors": "^2.8.5",
@@ -16,5 +17,14 @@
     "express": "^4.17.1",
     "puppeteer": "^9.1.1"
   },
-  "proxy": "http://localhost:3000/"
+  "proxy": "http://localhost:3000/",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sebastiancalleu/Mantis_temp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sebastiancalleu/Mantis_temp/issues"
+  },
+  "homepage": "https://github.com/sebastiancalleu/Mantis_temp#readme"
 }

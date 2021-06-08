@@ -1,8 +1,15 @@
 const express = require("express");
-const getSQ = require('./screeningQuestions/allocator').getSQ;
+const bodyParse = require('body-parser');
+
+// Main Routes
+const singleURL = require('./routes/inputurl')
+const multipleURL = require('./routes/multipleurl')
+
 const app = express();
 
+// Setting Up some middlewares
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParse.urlencoded({ extended: true }));
 app.use(express.json());
 
 
@@ -17,52 +24,17 @@ app.use((req, res, next) => {
 
 app.listen(3000)
 
-app.get("/api/status", function(req, res){
+app.get("/api/status", function (req, res) {
   res.json({
     status: "OK",
   })
 })
 
-app.post("/api/inputurl", function(req, res){
-  async function urljson() {
-      const mantisita = await getSQ(req.body.url)
-      return mantisita
-}
-  const dct = urljson()
-  dct.then(function(result){
-    console.log(result)
-    res.json(result)
-  })
-//   if (req.body.url === "www.mantis.com") {
-//     sq = [
-//       {
-//         "name": "Nombre",
-//         "type": "input" 
-//       },
-//       {
-//         "name": "Edad",
-//         "type": "input" 
-//       },
-//       {
-//         "name": "holbie",
-//         "type": "input"
-//       }
-//     ]
-//     res.json(sq)
-//   } else {
-//   res.json({
-//     status: "OK",
-//   })
-// }
-})
+app.post("/api/inputurl", singleURL);
+app.get("/api/multipleurl", multipleURL);
 
-app.post("/api/get", function(req, res){
+app.post("/api/get", function (req, res) {
   console.log(req.body)
   res.end()
 })
 
-app.get("/api/get", function(req, res){
-  res.json({
-    question: "what is your name",
-  })
-})
