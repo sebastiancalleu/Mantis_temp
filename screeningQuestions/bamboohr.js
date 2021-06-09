@@ -17,36 +17,57 @@ async function getJSON(URL) {
   await PlainHTML(URL)
     .then((formHTML) => {
       const $ = cheerio.load(formHTML);
-      $('div label').each((i, element) => {
-        let aux;
-        let tipo;  
-        if ($(element)['0'].children[0].parent.attribs.class !== 'placeholder noclick') {
-          aux = $(element)['0'].children[0].data; 
-            try {
-              if ($(element).next()['0'].children[0].next.name  == 'textarea') {
-                tipo = ('text');
-              }
-            } catch (error) {
-            } 
-            try {
-              if ($(element).next()['0'].children[0].attribs.type == 'text') {
-                tipo = ('text');     
-              } else if ($(element).next()['0'].children[0].children[0].next.attribs.type == 'file') {
-                  tipo = ($(element).next()['0'].children[0].children[0].next.attribs.type);
-              } else {
-                  tipo = ($(element).parent()['0'].children['1'].children[0].children[0].next.name);
-              }  
-            } catch (error) {
-            }
-            let tmpObj = {
-              name: aux,
-              type: tipo,
-            };
-            fieldsArray.push(tmpObj);
+      let aux = '';
+      let tipo;  
+      let opciones = [];
+      let tmpObj = {}
+      $('fieldset div div').each((i, element) => {
+        try {
+          aux = ($(element)['0'].children[0].children[0].data)
+        } catch (error) {  
+        }
+        try {
+          if ($(element)['0'].children[0].next.children[0].attribs.type == 'text') {
+            tipo = 'text'
+          } else if ($(element)['0'].children[0].next.children[0].children[1].name == 'select') {
+            tipo = 'select' 
+          }
+        } catch (error) {     
+        }
+        try {
+          if ($(element).children()[1].children[0].children[1].attribs.type == 'file') {
+            tipo = 'file' // ($(element)['0'].children[0].next.children[0].children[1].attribs.type) //file
+          }
+        } catch (error) {
+          tipo = 'text' //if no type selected then choose by default
+        }
+        if (aux !== '' && aux !== undefined && aux !== '–Select–' && !(JSON.stringify(fieldsArray).includes(aux)) && ($(element)['0'].children[0].name !== 'legend')) {
+          tmpObj = {
+            format: i,
+            options: opciones,
+            name: aux,
+            type: tipo,
+          };
+          fieldsArray.push(tmpObj);
         }
       });
-    });
-    return fieldsArray;
-};
+      $('legend').each((j, otherElement) => {
+        aux = ($(otherElement)['0'].children[0].data)
+        opciones = ['Yes', 'No']
+        tipo = 'select'
 
+        if (aux !== '' && aux !== undefined && aux !== '–Select–' && !(JSON.stringify(fieldsArray).includes(aux))) {
+          tmpObj = {
+            format: 'write',
+            options: opciones,
+            name: aux,
+            type: tipo,
+          };
+          fieldsArray.push(tmpObj);
+          opciones = []
+        }
+    });
+  });
+  return fieldsArray;
+}
 exports.getJSON = getJSON;
