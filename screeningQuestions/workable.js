@@ -29,9 +29,11 @@ async function getJSON(URL) {
             aux = $(element).parent().siblings().text()
             aux2 = element.attribs.type
           } else if (element.attribs.type === 'radio') {
-            if ($(element).parent().siblings().text().includes('Y') || $(element).siblings().text().includes('Y') || $(element).parent().siblings().text().includes('y') || $(element).siblings().text().includes('y')) {
+            if ($(element).parent().siblings().text().includes('Yes') || $(element).siblings().text().includes('Yes') || $(element).parent().siblings().text().includes('yes') || $(element).siblings().text().includes('yes')) {
               aux = $(element).parent().parent().parent().siblings().text()
-              aux2 = "yes/no"
+              aux2 = "yes-no"
+              options1.push("yes")
+              options1.push("no")
               for (i of fieldsArray) {
                 if (i.name === aux) {
                   aux = ""
@@ -65,12 +67,11 @@ async function getJSON(URL) {
           if (aux != '' && aux2 != '') {
             let tmpObj = {
               format: "write",
-              options: options1,
-              
+              options: options1,             
               name: aux,
               type: aux2
             }
-            fieldsArray.push(tmpObj);  
+            fieldsArray.push(tmpObj);
           }
         }
       })
