@@ -22,8 +22,12 @@ async function getJSON(URL) {
           let aux = ''
           let aux2 = ''
           let options1 = []
-          if (element.attribs['data-ui'] && element.attribs['data-ui'].includes("QA")) {
-            aux = $(element).parent().parent().siblings().text()
+          if (element.attribs['data-ui'] && (element.attribs['data-ui'].includes("QA") || element.attribs['data-ui'].includes("CA"))) {
+            if (element.attribs['data-ui'].includes("CA")) {
+              aux = $(element).parent().siblings().text()              
+            } else {
+              aux = $(element).parent().parent().siblings().text()
+            }
             aux2 = element.attribs.type
           } else if (element.attribs.type === 'checkbox') {
             aux = $(element).parent().siblings().text()
@@ -32,12 +36,12 @@ async function getJSON(URL) {
             if ($(element).parent().siblings().text().includes('Yes') || $(element).siblings().text().includes('Yes') || $(element).parent().siblings().text().includes('yes') || $(element).siblings().text().includes('yes')) {
               aux = $(element).parent().parent().parent().siblings().text()
               aux2 = "yes-no"
-              options1.push("yes")
-              options1.push("no")
+              options1 = ["Yes", "No"]
               for (i of fieldsArray) {
                 if (i.name === aux) {
                   aux = ""
                   aux2 = ""
+                  options1 = []
                 }
               }
             } else {
@@ -56,7 +60,7 @@ async function getJSON(URL) {
               }
             }
           } else {
-              if (element.attribs.name && element.attribs.name.includes("QA")) {
+              if (element.attribs.name && (element.attribs.name.includes("QA") || element.attribs.name.includes("CA"))) {
               aux = $(element).parent().siblings().text()
               aux2 = element.attribs.type
             } else {
