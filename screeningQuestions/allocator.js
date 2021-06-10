@@ -7,6 +7,7 @@ const careers_pageSQ = require('./careers_page').getJSON;
 const ashbyhqSQ = require('./ashbyhq').getJSON;
 const smartrecruitersSQ = require('./smartrecruiters').getJSON;
 const bambooSQ = require('./bamboohr').getJSON;
+const jobviteSQ = require('./jobvite').getJSON;
 
 let MyJSON;
 
@@ -30,6 +31,8 @@ function getSQ(urlx) {
     MyJSON =  (smartrecruitersSQ(urlx));
   } else if (urlx.includes('bamboohr.com')) {
     MyJSON =  (bambooSQ(urlx));
+  } else if (urlx.includes('jobs.jobvite.com')) {
+    MyJSON = (jobviteSQ(urlx))
   }
   console.log(urlx);
   return MyJSON;
