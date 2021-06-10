@@ -1,33 +1,48 @@
 const scrapForm = require('../getHTML').scrapForm;
 const cheerio = require('cheerio');
 
-async function PlainHTML(URL_d) {
-  try {
-    const desiredHTML = await scrapForm(URL_d);
-    return desiredHTML;
-  } catch (error) {
-    return (error);
-  }
+class Question {
 
-};
+  constructor(title, type, rank, options = null) {
+    this.title = title;
+    this.type = type;
+    this.rank = rank;
+    this.options = options;
+    this.format = 'write';
+    this.purpose = 'learn';
+    this.locale = 'en';
+  }
+}
 
 async function getJSON(URL) {
-  const fieldsArray = [];
+  // Get The rawHTML of the screening questions form
+  const formHTML = await scrapForm(URL);
+  const $ = cheerio.load(formHTML);
 
-  await PlainHTML(URL)
-    .then((formHTML) => {
-      const $ = cheerio.load(formHTML);
-      $('input').each((i, element) => {
-        if (element.attribs['aria-required'] == 'true') {
-          let tmpObj = {
-            name: element.attribs.formcontrolname,
-            type: element.attribs.type
-          }
-          fieldsArray.push(tmpObj)
-        }
-      })
+  // Scrap the form and build an auxiliar object
+
+  rawSQ = []
+
+  $('.form-label').each((i, element) => {
+    auxObj = {};
+    auxObj.title = $(element).text();
+    auxObj.type = $(element).siblings()[0].name;
+    auxObj.aux = $(element).siblings()[0].attribs['type'];
+
+    rawSQ.push(auxObj);
+
   });
-return fieldsArray;
+
+  // Using the auxiliar object build the torre final object
+
+  questions = [];
+  let i = 1;
+  for (element of rawSQ) {
+    questions.push(new Question(element.title, 'open-written', i));
+    i++;
+  }
+
+  return (questions);
 }
 
 exports.getJSON = getJSON;
