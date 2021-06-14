@@ -1,4 +1,4 @@
-const scrapForm = require('../getHTML').scrapForm;
+const scrapForm = require('../getRawHTML/getHTML').scrapForm;
 const cheerio = require('cheerio');
 
 async function PlainHTML(URL_d) {
@@ -24,7 +24,7 @@ async function getJSON(URL) {
           let options1 = []
           if (element.attribs['data-ui'] && (element.attribs['data-ui'].includes("QA") || element.attribs['data-ui'].includes("CA"))) {
             if (element.attribs['data-ui'].includes("CA")) {
-              aux = $(element).parent().siblings().text()              
+              aux = $(element).parent().siblings().text()
             } else {
               aux = $(element).parent().parent().siblings().text()
             }
@@ -60,18 +60,18 @@ async function getJSON(URL) {
               }
             }
           } else {
-              if (element.attribs.name && (element.attribs.name.includes("QA") || element.attribs.name.includes("CA"))) {
+            if (element.attribs.name && (element.attribs.name.includes("QA") || element.attribs.name.includes("CA"))) {
               aux = $(element).parent().siblings().text()
               aux2 = element.attribs.type
             } else {
-            aux = element.attribs.name || element.attribs['data-ui']
-            aux2 = element.attribs.type
+              aux = element.attribs.name || element.attribs['data-ui']
+              aux2 = element.attribs.type
             }
           }
           if (aux != '' && aux2 != '') {
             let tmpObj = {
               format: "write",
-              options: options1,             
+              options: options1,
               name: aux,
               type: aux2
             }
@@ -79,12 +79,12 @@ async function getJSON(URL) {
           }
         }
       })
-       $('textarea').each((i, element) => {
-         let aux = ""
-         aux = $(element).parent().parent().siblings().text()
-         if (element.attribs.name.includes("QA")) {
-           aux = $(element).parent().parent().siblings().text()
-          }
+      $('textarea').each((i, element) => {
+        let aux = ""
+        aux = $(element).parent().parent().siblings().text()
+        if (element.attribs.name.includes("QA")) {
+          aux = $(element).parent().parent().siblings().text()
+        }
         let tmpObj1 = {
           name: aux,
           type: "textarea"
@@ -92,7 +92,7 @@ async function getJSON(URL) {
         fieldsArray.push(tmpObj1);
       });
     });
-    return fieldsArray;
+  return fieldsArray;
 };
 
 exports.getJSON = getJSON;

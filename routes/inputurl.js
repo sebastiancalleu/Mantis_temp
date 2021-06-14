@@ -1,5 +1,5 @@
 const express = require('express');
-const getSQ = require('../screeningQuestions/allocator').getSQ;
+const getSQ = require('../services/screeningQuestions/allocator').getSQ;
 const router = express.Router();
 
 /* GET home page. */

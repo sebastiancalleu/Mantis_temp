@@ -1,4 +1,4 @@
-const scrapForm = require('../getHTML').scrapForm;
+const scrapForm = require('../getRawHTML/getHTML').scrapForm;
 const cheerio = require('cheerio');
 
 class Question {

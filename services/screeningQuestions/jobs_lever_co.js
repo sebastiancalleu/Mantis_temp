@@ -1,4 +1,4 @@
-const scrapForm = require('../getHTML').scrapForm;
+const scrapForm = require('../getRawHTML/getHTML').scrapForm;
 const cheerio = require('cheerio');
 
 async function PlainHTML(URL_d) {
@@ -36,7 +36,7 @@ async function getJSON(URL) {
       });
       $('textarea').each((i, element) => {
         if (element.attribs.required) {
-          
+
           let tmpObj1 = {
             name: '¿Cuál es tu expectativa salarial para esta posición?',
             type: 'textarea'
@@ -45,7 +45,7 @@ async function getJSON(URL) {
         }
       });
     })
-    return fieldsArray;
+  return fieldsArray;
 };
 
 exports.getJSON = getJSON;

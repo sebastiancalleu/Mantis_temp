@@ -1,4 +1,4 @@
-const scrapForm = require('../getHTML').scrapForm;
+const scrapForm = require('../getRawHTML/getHTML').scrapForm;
 const cheerio = require('cheerio');
 
 async function PlainHTML(URL_d) {
@@ -18,10 +18,10 @@ async function getJSON(URL) {
     .then((formHTML) => {
       const $ = cheerio.load(formHTML);
       $('input').each((i, element) => {
-      console.log(element.attribs)
+        console.log(element.attribs)
       })
     });
-    return fieldsArray;
+  return fieldsArray;
 };
 
 exports.getJSON = getJSON;

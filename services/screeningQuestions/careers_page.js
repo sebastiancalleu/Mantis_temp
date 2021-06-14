@@ -1,4 +1,4 @@
-const scrapForm = require('../getHTML').scrapForm;
+const scrapForm = require('../getRawHTML/getHTML').scrapForm;
 const cheerio = require('cheerio');
 
 async function PlainHTML(URL_d) {
@@ -32,7 +32,7 @@ async function getJSON(URL) {
         }
       });
     });
-    return fieldsArray;
+  return fieldsArray;
 };
 
 exports.getJSON = getJSON;

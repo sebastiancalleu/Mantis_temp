@@ -1,10 +1,9 @@
 const express = require('express');
-const getSQ = require('../screeningQuestions/allocator').getSQ;
+const getSQ = require('../services/screeningQuestions/allocator').getSQ;
 const router = express.Router();
 
 /* GET home page. */
 router.get('/api/multipleurl', function (req, res) {
-
 
   async function multipleURL(targets) {
     let array = [];
@@ -23,8 +22,6 @@ router.get('/api/multipleurl', function (req, res) {
   dct.then(function (result) {
     res.json(result);
   });
-
-
 });
 
 module.exports = router;
