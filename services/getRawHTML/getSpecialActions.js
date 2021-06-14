@@ -10,7 +10,7 @@ const getSpecialActions = (atsName) => {
     actionsSet.prevActions = [
       `document.querySelector('div.jv-job-detail-bottom-actions a.jv-button').click()`,
       `if (document.querySelector('#jv-country-select')) {
-          document.querySelector('#jv-country-select').value = document.querySelectorAll('#jv-country-select option')[1].value;
+          document.querySelector('#jv-country-select').value = document.querySelectorAll('#jv-country-select option')[2].value;
           let e = document.createEvent('HTMLEvents');
           e.initEvent('change', false, true);
           document.querySelector('#jv-country-select').dispatchEvent(e);
