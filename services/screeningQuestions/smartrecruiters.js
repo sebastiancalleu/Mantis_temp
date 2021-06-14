@@ -3,7 +3,7 @@ const cheerio = require('cheerio');
 
 class Question {
 
-  constructor(title, type, rank, options = null) {
+  constructor(title, type, rank, options = []) {
     this.title = title;
     this.type = type;
     this.rank = rank;
