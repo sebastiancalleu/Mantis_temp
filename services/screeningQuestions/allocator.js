@@ -9,33 +9,36 @@ const smartrecruitersSQ = require('./smartrecruiters').getJSON;
 const bambooSQ = require('./bamboohr').getJSON;
 const jobviteSQ = require('./jobvite').getJSON;
 
+
 let MyJSON;
 
-function getSQ(urlx) {
-
-  if (urlx.includes('workable.com')) {
-    MyJSON = (workableSQ(urlx));
-  } else if (urlx.includes('greenhouse.io')) {
-    MyJSON =  (greenhouseSQ(urlx));
-  } else if (urlx.includes('jobs.lever.co')) {
-    MyJSON =  (jobs_lever_coSQ(urlx));
-  } else if (urlx.includes('breezy.hr')) {
-    MyJSON =  (breezySQ(urlx));
-  } else if (urlx.includes('applytojob.com')) {
-    MyJSON =  (applytojobSQ(urlx));
-  } else if (urlx.includes('careers-page.com')) {
-    MyJSON = (careers_pageSQ(urlx));
-  } else if (urlx.includes('ashbyhq.com')) {
-    MyJSON =  (ashbyhqSQ(urlx));
-  } else if (urlx.includes('smartrecruiters.com')) {
-    MyJSON =  (smartrecruitersSQ(urlx));
-  } else if (urlx.includes('bamboohr.com')) {
-    MyJSON =  (bambooSQ(urlx));
-  } else if (urlx.includes('jobs.jobvite.com')) {
-    MyJSON = (jobviteSQ(urlx))
+async function getSQ(URL) {
+  if (URL.includes('workable.com')) {
+    MyJSON = await workableSQ(URL);
+  } else if (URL.includes('greenhouse.io')) {
+    MyJSON = await greenhouseSQ(URL);
+  } else if (URL.includes('jobs.lever.co')) {
+    MyJSON = await jobs_lever_coSQ(URL);
+  } else if (URL.includes('breezy.hr')) {
+    MyJSON = await breezySQ(URL);
+  } else if (URL.includes('applytojob.com')) {
+    MyJSON = await applytojobSQ(URL);
+  } else if (URL.includes('careers-page.com')) {
+    MyJSON = await careers_pageSQ(URL);
+  } else if (URL.includes('ashbyhq.com')) {
+    MyJSON = await ashbyhqSQ(URL);
+  } else if (URL.includes('smartrecruiters.com')) {
+    MyJSON = await smartrecruitersSQ(URL);
+  } else if (URL.includes('bamboohr.com')) {
+    MyJSON = await bambooSQ(URL);
+  } else if (URL.includes('jobs.jobvite.com')) {
+    MyJSON = await jobviteSQ(URL);
   }
-  console.log(urlx);
-  return MyJSON;
+  console.log(URL);
+  return {
+    url: URL,
+    questions: MyJSON
+  };
 };
 
 exports.getSQ = getSQ;

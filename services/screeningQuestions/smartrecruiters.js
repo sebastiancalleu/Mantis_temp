@@ -1,18 +1,6 @@
 const scrapForm = require('../getRawHTML/getHTML').scrapForm;
+const Question = require('./torreQuestionClass').Question;
 const cheerio = require('cheerio');
-
-class Question {
-
-  constructor(title, type, rank, options = []) {
-    this.title = title;
-    this.type = type;
-    this.rank = rank;
-    this.options = options;
-    this.format = 'write';
-    this.purpose = 'learn';
-    this.locale = 'en';
-  }
-}
 
 async function getJSON(URL) {
   // Get The rawHTML of the screening questions form
@@ -36,7 +24,7 @@ async function getJSON(URL) {
   // Using the auxiliar object build the torre final object
 
   questions = [];
-  let i = 1;
+  let i = 0;
   for (element of rawSQ) {
     questions.push(new Question(element.title, 'open-written', i));
     i++;
