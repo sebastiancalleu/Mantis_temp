@@ -7,7 +7,7 @@ router.post('/api/inputurl', function (req, res) {
   (async function singleURL() {
     const question = await getSQ(req.body.url)
     console.log(question);
-    res.json(question);
+    res.json(question.questions);
   })();
 });
 
