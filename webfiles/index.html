@@ -93,12 +93,27 @@
             console.log(data)
             for (question in data) {
                 $("#questionsform").append("<div class='questions' id='question" + question + "'></div>")
+                if (data[question].name === "avatar") {
+                    data[question].name = "Photo"
+                }
                 if (data[question].type === "textarea") {
-                    $("#question" + question).append("<textarea id='" + data[question].name + "'></textarea>")      
+                    $("#question" + question).append("<textarea id='" + data[question].name + "'></textarea>")  
+                    $("#question" + question).append("<label class='questionlabel'>" + data[question].name + "</label>")    
+                } else if (data[question].type === "yes-no"){
+                    $("#question" + question).append("<label class='questionlabel'>" + data[question].name + "</label>")
+                    // for (option in data.options) {
+                    //     $("#question" + question).append("<div id='" + option + question + "'></div>")
+                    //     $("#" + option + question).append("<input type=radio value='" + option + "'\>")
+                    // }
+                    $("#question" + question).append("<div id='yes" + question + "'></div>")
+                    $("#yes" + question).append("<input type=radio value='Yes'\> yes")
+                    $("#question" + question).append("<div id='no" + question + "'></div>")
+                    $("#no" + question).append("<input type=radio value='No'\> no")
+
                 } else {
                     $("#question" + question).append("<input type='" + data[question].type + "'\>")
+                    $("#question" + question).append("<label class='questionlabel'>" + data[question].name + "</label>")
                 }
-                $("#question" + question).append("<label class='questionlabel'>" + data[question].name + "</label>")
             }
             $('#questionsform').append("<button class='send_button'>Submit Application</button>")
             $('.send_button').click(function() {
