@@ -60,7 +60,7 @@ async function getJSON(URL) {
       if (aux != '' && aux2 != '') {
         let tmpObj = {
           format: "write",
-          options: options1,
+          options: ["yes", "no"],
           name: aux,
           type: aux2
         }
