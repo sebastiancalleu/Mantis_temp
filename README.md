@@ -1,6 +1,8 @@
 # Project Mantis
 ---
 ---
+![torre](https://torre-media.s3-us-west-2.amazonaws.com/subtorres/Gig/torre.png)
+
 
 ## Introduction
 ---
