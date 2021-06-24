@@ -12,4 +12,16 @@ class Question {
   }
 }
 
+class Option {
+
+  constructor(title, rank) {
+
+    this.id = '';
+    this.purposeType = 'qualifies';
+    this.title = title;
+    this.rank = rank;
+  }
+}
+
 exports.Question = Question;
+exports.Option = Option;

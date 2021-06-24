@@ -1,66 +1,51 @@
 const scrapForm = require('../getRawHTML/getHTML').scrapForm;
 const cheerio = require('cheerio');
+const Option = require('./torreQuestionClass').Option;
+const Question = require('./torreQuestionClass').Question;
+
+function scrapGreenHouse($, targetTag) {
+
+  let title, type, options = [], tagFields = [], $2;
+
+  $(targetTag).each((i, element) => {
+
+    $2 = cheerio.load(element);
+    if ($2('select').length > 0) {
+      $2('select > option').each((j, option_element) => {
+        if (j > 0) { options.push(new Option($2(option_element).text(), j - 1)); }
+      })
+    }
+
+    if (options.length === 0) { type = 'open-write'; }
+    else if (options.length === 2 && options[0].title === 'Yes') { type = 'yes-no'; }
+    else { type = 'multiple-choice'; }
+
+    title = $(element).text().split('\n')[0];
+    tagFields.push({ title, options, type });
+  });
+
+  return (tagFields);
+}
 
 async function getJSON(URL) {
-  const fieldsArray = [];
 
-  const formHTML = await scrapForm(URL);
+  let rawHTML, $, fields = [], questions = [], i = 0;
+  try {
+    rawHTML = await scrapForm(URL);
+    $ = cheerio.load(rawHTML);
+  } catch {
+    return ({ error: 'Please provide a valid open position URL' });
+  }
 
-  const $ = cheerio.load(formHTML);
-  $('.field*').each((i, element) => { // select all the element with class field
-    let aux;
-    let tipo;
-    let opciones = [];
-    let flag = 0;
-    aux = element.children['0'].next.children[0].data.trim() //save the question name
-    if (aux.length == 0 || aux == '(Select one)') { // if no stored saved then try loooking this option
-      aux = $(element)['0'].children[0].data.trim()
-      const $2 = cheerio.load(element);
-      $2('label').each((a, subelement) => {
-        try {
-          opciones.push($(subelement).children()['0'].next.data.trim())
-          tipo = 'select'
-          flag = 1;
-        } catch (error) {
-        }
-      });
-    } else { // if question was stored then add type and options
-      try {
-        if ($(element).children().children().find('input')['0'].attribs.type == 'checkbox') {
-          tipo = 'select'
-          const $2 = cheerio.load(element);
-          $2('label').each((a, subelement) => {
-            opciones.push(subelement.children[2].data)
-          });
-          flag = 1;
-        }
-      } catch (error) {
-      }
-      if (flag == 0) { // if the type is not select then try to looking other options
-        try {
-          if ($(element).find('select').text().length !== 0) {
-            tipo = 'select'
-            opciones = $(element).find('select').text().split('\n')
-          } else if ($(element).find('input')['0'].attribs.type === 'hidden' || $(element).find('input')['0'].attribs.type === 'text') {
-            tipo = 'text'
-          }
-        } catch (error) {
-          console.log('error')
-        }
-      }
-      if (tipo == undefined) { // if type not selected then asssign  type = file 
-        tipo = 'file'
-      }
-    }
-    tmpObj = {
-      format: "write",
-      options: opciones,
-      name: aux,
-      type: tipo,
-    };
-    fieldsArray.push(tmpObj);
-  })
-  return fieldsArray;
-};
+  fields = fields.concat(scrapGreenHouse($, '#custom_fields > .field > label'));
+  fields = fields.concat(scrapGreenHouse($, '#eeoc_fields > div'));
+
+  for (element of fields) {
+    questions.push(new Question(element.title, element.type, i, element.options));
+    i++;
+  }
+  return (questions);
+
+}
 
 exports.getJSON = getJSON;

@@ -27,7 +27,6 @@ async function scrapForm(URL) {
     await page.goto(URL, {
       waitUntil: 'networkidle0'
     });
-
     const atsActions = getActions(URL);
 
     // If the ats Object has previous Target some clicks are needed
@@ -39,11 +38,11 @@ async function scrapForm(URL) {
     }
 
     let rawHTML;
+
     for (element of atsActions.coreActions()) {
       rawHTML += await page.evaluate(element);
       await waitUntilLoaded(page);
     }
-    // console.log(rawHTML);
 
     browser.close();
     return rawHTML;
@@ -52,7 +51,6 @@ async function scrapForm(URL) {
     if (browser) {
       browser.close();
     }
-    return 'Plase review the URL seems like it is not a valid open position';
   }
 }
 
@@ -82,10 +80,6 @@ async function waitUntilLoaded(page) {
   })
 }
 
-// for testing pourposes
-
-
-
-// scrapForm('https://lumenvox.bamboohr.com/jobs/view.php?id=34');
+//scrapForm('https://jobs.jobvite.com/logitech/job/ohMMdfwM');
 
 exports.scrapForm = scrapForm
