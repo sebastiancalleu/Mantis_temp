@@ -31,7 +31,6 @@ const scrapQuestions = (outerContainer) => {
       type: type,
       options: options
     })
-
   };
 
   const pattern2 = ($) => {
@@ -42,10 +41,7 @@ const scrapQuestions = (outerContainer) => {
       type: type,
       options: options
     })
-
   };
-
-
 
   // ******************************************
 
@@ -62,11 +58,10 @@ const scrapQuestions = (outerContainer) => {
 };
 
 // ****
-// 
 
 async function getJSON(URL) {
 
-  let rawHTML, $, $2, questions = [], options = [], i = 0;
+  let rawHTML, $, $2, questions = [], i = 0;
 
   // **** Get the HTML of the FORM:
   try {
@@ -79,7 +74,6 @@ async function getJSON(URL) {
   // ****
 
   let generalContainers = [];
-  let containersToExclude = [];
 
   // **** Make an array of the question containers:
 
@@ -99,7 +93,6 @@ async function getJSON(URL) {
     }
   });
 
-
   // ****
 
   let questionObject, k = 0;
@@ -110,7 +103,6 @@ async function getJSON(URL) {
       k++;
     }
   });
-
   return (questions);
 
 }

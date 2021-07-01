@@ -63,7 +63,7 @@ const scrapQuestions = (outerContainer) => {
 
 async function getJSON(URL) {
 
-  let title, type, rawHTML, $, $2, $3, fields = [], questions = [], options = [], i = 0;
+  let rawHTML, $, $2, questions = [];
 
   // **** Get the HTML of the FORM:
   try {

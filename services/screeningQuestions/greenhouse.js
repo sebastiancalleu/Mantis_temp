@@ -99,11 +99,10 @@ const scrapQuestions = (outerContainer) => {
 };
 
 // ****
-// 
 
 async function getJSON(URL) {
 
-  let title, type, rawHTML, $, $2, $3, fields = [], questions = [], options = [], i = 0;
+  let rawHTML, $, $2, questions = [];
 
   // **** Get the HTML of the FORM:
   try {
@@ -116,7 +115,6 @@ async function getJSON(URL) {
   // ****
 
   let generalContainers = [];
-  let additionalInfoSection = false;
   let containersToExclude = ['main_fields', 'eeoc_fields', 'demographic_questions', 'education_section'];
 
   // **** Make an array of the question containers:
@@ -129,7 +127,6 @@ async function getJSON(URL) {
       });
     }
   });
-
 
   // ****
 
