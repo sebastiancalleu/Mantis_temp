@@ -1,94 +1,118 @@
 const scrapForm = require('../getRawHTML/getHTML').scrapForm;
 const cheerio = require('cheerio');
+const Option = require('./torreQuestionClass').Option;
+const Question = require('./torreQuestionClass').Question;
+
+/**
+ * Receives the container of a question and extract the information
+ * 
+ * @param {Cheerio Object} outerContainer 
+ * @returns A Question object
+ */
+
+const scrapQuestions = (outerContainer) => {
+
+  // These are the patterns of the page
+  // **********************************
+
+  const pattern1 = ($) => {
+    let options = [], type;
+
+    $('div > div > label').each((i, element) => {
+      options.push(new Option($(element).text(), i));
+    });
+
+    if (options.length === 0) { type = 'open-write'; }
+    else if (options.length === 2 && options[0].title === 'Yes') { type = 'yes-no'; }
+    else { type = 'multiple-choice'; }
+
+    return ({
+      title: $('legend').text(),
+      type: type,
+      options: options
+    })
+
+  };
+
+  const pattern2 = ($) => {
+    let options = [], type = 'open-write';
+
+    return ({
+      title: $('div > label').text(),
+      type: type,
+      options: options
+    })
+
+  };
+
+
+
+  // ******************************************
+
+  // **** Here Mantis identifies Patterns and executes the adecuate function
+
+  let $ = cheerio.load(outerContainer);
+
+  if ($('legend').length) {
+    return (pattern1($));
+  } else if ($('div > label').length) {
+    return (pattern2($));
+  }
+
+};
+
+// ****
+// 
 
 async function getJSON(URL) {
-  const fieldsArray = [];
 
-  const formHTML = await scrapForm(URL)
-  const $ = cheerio.load(formHTML);
+  let rawHTML, $, $2, questions = [], options = [], i = 0;
 
-  let aux = '';
-  let tipo;
-  let opciones = [];
-  let tmpObj = {}
-  $('fieldset div div').each((i, element) => {
-    try {
-      aux = ($(element)['0'].children[0].children[0].data)
-    } catch (error) {
-    }
-    try {
-      if ($(element)['0'].children[0].next.children[0].attribs.type == 'text') {
-        tipo = 'text'
-      } else if ($(element)['0'].children[0].next.children[0].children[1].name == 'select') {
-        tipo = 'select'
+  // **** Get the HTML of the FORM:
+  try {
+    rawHTML = await scrapForm(URL);
+    $ = cheerio.load(rawHTML);
+  } catch {
+    return ({ error: 'Please provide a valid open position URL' });
+  }
+
+  // ****
+
+  let generalContainers = [];
+  let containersToExclude = [];
+
+  // **** Make an array of the question containers:
+
+  $('fieldset').each((i, element) => {
+    $2 = cheerio.load(element);
+    if (i > 0) {
+      if ($2('fieldset > legend').length === 0) {
+        $2('fieldset > div > div').each((j, questionElement) => {
+          generalContainers.push(questionElement);
+        });
+      } else {
+        $2('fieldset').each((j, questionElement) => {
+          generalContainers.push(questionElement);
+        });
+
       }
-    } catch (error) {
-    }
-    try {
-      if ($(element).children()[1].children[0].children[1].attribs.type == 'file') {
-        tipo = 'file' // ($(element)['0'].children[0].next.children[0].children[1].attribs.type) //file
-      }
-    } catch (error) {
-      tipo = 'text' //if no type selected then choose by default
-    }
-    try {
-      tipo = (($(element)['0'].children[0].children[0].attribs.type))
-      aux = (($(element)['0'].children[0].children[0].next.children[0].children[0].data))
-    } catch (error) {
-    }
-    if (aux !== '' && aux !== undefined && aux !== '–Select–' && !(JSON.stringify(fieldsArray).includes(aux)) && ($(element)['0'].children[0].name !== 'legend')) {
-      tmpObj = {
-        format: 'write',
-        options: opciones,
-        name: aux,
-        type: tipo,
-      };
-      fieldsArray.push(tmpObj);
     }
   });
-  $('fieldset div').each((j, otherElement) => {
-    const $2 = cheerio.load(otherElement);
-    let opciones2 = [];
-    try {
-      if ($(otherElement)['0'].children[0].name == 'legend') {
-        aux = ($(otherElement)['0'].children[0].children[0].data)
-        tipo = 'select'
-        $2('div div div').each((k, subElement) => {
-          try {
-            if ($2(subElement)[0].parent.prev.name == 'legend' && $(otherElement)['0'].children[0].name == 'legend') {
-              opciones2.push($2(subElement)[0].children[0].next.children[0].data);
-            }
-          } catch (error) {
-          }
-        });
-      }
-      else if ($(otherElement)['0'].children[0].children[0].name == 'legend') {
-        aux = ($(otherElement)['0'].children[0].children[0].children[0].data)
-        tipo = 'select'
-        $2('div div div').each((k, subElement) => {
-          try {
-            if ($2(subElement)[0].children[0].next.children[0].data != undefined)
-              opciones2.push($2(subElement)[0].children[0].next.children[0].data);
-          } catch (error) {
-          }
-        });
-      }
-    } catch (error) {
 
-    }
 
-    if (aux !== '' && aux !== undefined && aux !== '–Select–' && !(JSON.stringify(fieldsArray).includes(aux))) {
-      tmpObj = {
-        format: 'write',
-        options: opciones2,
-        name: aux,
-        type: tipo,
-      };
+  // ****
 
-      fieldsArray.push(tmpObj);
-      opciones2 = []
+  let questionObject, k = 0;
+  generalContainers.forEach((element, i) => {
+    questionObject = scrapQuestions(element);
+    if (questionObject && questionObject.title) {
+      questions.push(new Question(questionObject, k));
+      k++;
     }
   });
-  return fieldsArray;
+
+  return (questions);
+
 }
+
 exports.getJSON = getJSON;
