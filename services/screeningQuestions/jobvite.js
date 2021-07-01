@@ -1,16 +1,18 @@
 const scrapForm = require('../getRawHTML/getHTML').scrapForm;
 const cheerio = require('cheerio');
 
-async function getJSON(URL) {
-  const fieldsArray = [];
+(async function getJSON(URL) {
 
-  const formHTML = await scrapForm(URL);
+  let rawHTML, $, fields = [], questions = [], i = 0;
 
-  const $ = cheerio.load(formHTML);
-  $('input').each((i, element) => {
-    console.log(element.attribs)
-  });
-  return fieldsArray;
-};
+  try {
+    rawHTML = await scrapForm(URL);
+    $ = cheerio.load(rawHTML);
+  } catch {
+    return ({ error: 'Please provide a valid open position URL' });
+  }
 
-exports.getJSON = getJSON;
+  console.log(rawHTML);
+})("https://www.upeducationnetwork.org/careers/?p=job/okg2efwA&nl=1");
+
+//exports.getJSON = getJSON;

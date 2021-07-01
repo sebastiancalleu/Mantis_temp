@@ -8,7 +8,7 @@ const getSpecialActions = (atsName) => {
 
   if (atsName == 'jobvite') {
     actionsSet.prevActions = [
-      `document.querySelector('div.jv-job-detail-bottom-actions a.jv-button').click()`,
+      `document.querySelector('div.jv-job-detail-bottom-actions  a.jv-button').click()`,
       `if (document.querySelector('#jv-country-select')) {
           document.querySelector('#jv-country-select').value = document.querySelectorAll('#jv-country-select option')[2].value;
           let e = document.createEvent('HTMLEvents');
@@ -22,7 +22,7 @@ const getSpecialActions = (atsName) => {
     ];
 
     actionsSet.coreActions = [
-      `document.querySelector('form.ng-pristine').outerHTML`
+      `document.querySelector('.jv-form').outerHTML`
     ]
   } else if (atsName == 'comeet') {
 

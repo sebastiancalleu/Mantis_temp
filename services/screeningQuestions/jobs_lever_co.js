@@ -109,9 +109,14 @@ async function getJSON(URL) {
   });
 
   if (additionalInfoSection) {
-    questions.push(new Question(additionalInfoSection, questions[questions.length - 1].rank + 1));
+    if (questions.length > 0) {
+      questions.push(new Question(additionalInfoSection, questions[questions.length - 1].rank + 1));
+    } else {
+      questions.push(new Question(additionalInfoSection, 0));
+    }
   }
 
+  return (questions);
 };
 
 exports.getJSON = getJSON;

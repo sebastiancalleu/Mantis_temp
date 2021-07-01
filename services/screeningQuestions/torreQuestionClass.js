@@ -1,6 +1,6 @@
 class Question {
 
-  constructor(title, type, rank, options = []) {
+  constructor({ title, type, options = [] }, rank) {
 
     this.title = title;
     this.type = type;
