@@ -41,7 +41,7 @@ const breezy = () => { return (new atsActions('.apply', 'form', null)) };
 const applytojob = () => { return (new atsActions(null, '#job-application-form-container', null)) };
 const careers = () => { return (new atsActions('.btn-lg', 'form', null)) };
 const smartrecruiters = () => { return (new atsActions('#st-apply', 'oc-oneclick-form', null)) };
-const ashbyhq = () => { return (new atsActions('.Button_primary__I_9I9', '.JobPosting_section__m7PMk', null)) };
+const ashbyhq = () => { return (new atsActions('.Button_primary__I_9I9', '.JobPosting_jobPostingForm__3lGEM', null)) };
 const comeet = () => { return (new atsActions('#showApplyForm', '.form-container', 'comeet')) };
 const cvwarehouse = () => { return (new atsActions('a.important', '#signUp', null)) };
 const recruitee = () => { return (new atsActions('a.btn-thebiggest', '#new_candidate', null)) };

@@ -1,101 +1,122 @@
 const scrapForm = require('../getRawHTML/getHTML').scrapForm;
 const cheerio = require('cheerio');
+const Option = require('./torreQuestionClass').Option;
+const Question = require('./torreQuestionClass').Question;
 
+/**
+ * Receives the container of a question and extract the information
+ * 
+ * @param {Cheerio Object} outerContainer 
+ * @returns A Question object
+ */
+
+const scrapQuestions = (outerContainer) => {
+
+  // These are the patterns of the page
+  // **********************************
+
+  const pattern1 = ($) => {
+    let options = [], type;
+
+    $('fieldset > div.ChecklikeGroup_option__Q0chm > label').each((i, element) => {
+      options.push(new Option($(element).text(), i));
+    });
+
+    if (options.length === 0) { type = 'open-write'; }
+    else if (options.length === 2 && options[0].title === 'Yes') { type = 'yes-no'; }
+    else { type = 'multiple-choice'; }
+
+    return ({
+      title: $('fieldset > label').text(),
+      type: type,
+      options: options
+    })
+  };
+
+  const pattern2 = ($) => {
+    let options = [], type = 'yes-no';
+
+    $('div > div > button').each((i, element) => {
+      options.push(new Option($(element).text(), i));
+    });
+
+    return ({
+      title: $('div > label').text(),
+      type: type,
+      options: options
+    })
+  };
+
+  const pattern3 = ($) => {
+    let options = [], type = 'open-write';
+
+    return ({
+      title: $('div > label').text(),
+      type: type,
+      options: options
+    })
+  };
+
+
+
+  // ******************************************
+
+  // **** Here Mantis identifies Patterns and executes the adecuate function
+
+  let $ = cheerio.load(outerContainer);
+
+
+  if ($('fieldset > div.ChecklikeGroup_option__Q0chm').length) {
+    return (pattern1($));
+  } else if ($('div > div.YesNo_container__U3qn3 > button').length) {
+    return (pattern2($));
+  } else if ($('div > input').length || $('div > textarea').length) {
+    return (pattern3($));
+  }
+};
+
+// ****
 
 async function getJSON(URL) {
-  const fieldsArray = [];
-  let counter = 0;
 
-  const formHTML = await scrapForm(URL);
-  const $ = cheerio.load(formHTML);
+  let rawHTML, $, $2, questions = [];
 
-  $('div label').each((i, element) => {
-    let aux;
-    let tipo;
-    let opciones = null;
-    try {
-      if (($(element).parent()['0'].name !== 'fieldset') && !($(element).prev()[0])) {
-        aux = $(element)['0'].children[0].data // tener en cuenta los que no tienen label y son preguuntas
-        if (($(element)['0'].next.children[0].name == 'p')) {
-          aux = aux + '(' + $(element)['0'].next.children[0].children[0].data + ')'
-        }
-      }
-    } catch (error) {
-    }
-    try {
-      if ($(element)['0'].next.attribs.type == 'text' || $(element)['0'].next.attribs.type == 'email' || $(element)['0'].next.attribs.type == 'tel') {
-        tipo = 'text' //incluir tel
-      } else if ($(element)['0'].next.name == 'textarea') {
-        tipo = 'text'
-      } else if ($(element)['0'].next.children[0].attribs['type'] == 'file') {
-        tipo = 'file'
-      } else if ($(element)['0'].next.next.attribs.type == 'text') {
-        tipo = 'text'
-      }
-    } catch (error) {
-      try {
-        if ($(element)['0'].next.children['0']) {
-          tipo = $(element)['0'].next.children['0'].name
-          if (tipo == 'button') {
-            opciones = ['yes', 'no'];
-          }
-        }
-      } catch (error) {
-        tipo = 'text'
-      }
-    }
-    if (aux !== undefined && tipo !== 'p') {
-      counter++;
-      let tmpObj = {
-        title: aux,
-        rank: counter,
-        options: opciones,
-        formateq: 'write',
-        type: tipo,
-        purporse: 'learn',
-        locale: 'en',
-      }
-      fieldsArray.push(tmpObj);
-      opciones = null;
-    }
+  // **** Get the HTML of the FORM:
+  try {
+    rawHTML = await scrapForm(URL);
+    $ = cheerio.load(rawHTML);
+  } catch {
+    return ({ error: 'Please provide a valid open position URL' });
+  }
+
+  // ****
+
+  let generalContainers = [];
+
+  // **** Make an array of the question containers:
+
+  $('div.JobPosting_section__m7PMk').each((i, element) => {
+    $2 = cheerio.load(element);
+    $2('div.EditableFieldEntry_fieldEntry__2itX8').each((j, questionElement) => {
+      generalContainers.push(questionElement);
+    });
+    $2('div.JobPosting_section__m7PMk > fieldset').each((j, questionElement) => {
+      generalContainers.push(questionElement);
+    });
 
   });
-  $('fieldset').each((j, secondElement) => {
-    let aux;
-    let tipo;
-    let opciones = [];
-    aux = $(secondElement)['0'].children[0].children[0].data
 
-    try {
-      const $2 = cheerio.load(secondElement);
-      $2('div label').each((k, subElement) => {
-        if ($2(subElement)['0'].prev.children[0].next.attribs.type == 'radio') {
-          tipo = 'select'
-          opciones.push($2(subElement)['0'].children[0].data)
-        } else if ($$2(subElement)['0'].prev.children[0].next.attribs.type == 'checkbox') {
-          tipo = 'checkbox'
-          opciones.push($2(subElement)['0'].children[0].data)
-        }
-      })
-    } catch (error) {
-    }
+  // ****
 
-    if (aux !== undefined && tipo !== 'p') {
-      counter++;
-      let tmpObj = {
-        title: aux,
-        rank: counter,
-        options: opciones,
-        formateq: 'wirte',
-        type: tipo,
-        purporse: 'learn',
-        locale: 'en',
-      }
-      fieldsArray.push(tmpObj);
-      opciones = null;
+  let questionObject, k = 0;
+  generalContainers.forEach((element, i) => {
+    questionObject = scrapQuestions(element);
+    if (questionObject) {
+      questions.push(new Question(questionObject, k));
+      k++;
     }
   });
-  return fieldsArray;
+  return (questions);
 };
 
 exports.getJSON = getJSON;
